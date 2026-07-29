@@ -68,7 +68,6 @@ const App = () => (
             <Route path="/refund-policy" element={<RefundPolicy />} />
             <Route path="/shipping-policy" element={<ShippingPolicy />} />
             <Route path="/about-us" element={<AboutUs />} />
-            <Route path="/about" element={<Navigate to="/about-us" replace />} />
             <Route path="/delivery-partner-registration" element={<DeliveryPartnerRegistration />} />
             <Route path="/delete-account" element={<DeleteAccount />} />
             <Route path="/download" element={<DownloadApp />} />
