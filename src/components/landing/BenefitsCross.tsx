@@ -1,8 +1,8 @@
 import { motion } from "framer-motion";
 import { DollarSign, Lightbulb, Hourglass, FastForward, Target, BarChart3 } from "lucide-react";
 
-/* Knotch-style benefit tile — dark card, round icon badge, bold title,
-   muted description on the next line, tight sans font. */
+/* Knotch-style benefit tile — light glass card, cyan icon badge, bold slate title,
+   muted continuation on the next line. */
 const Tile = ({
   icon: Icon,
   title,
@@ -21,31 +21,28 @@ const Tile = ({
     whileInView={{ opacity: 1, y: 0 }}
     viewport={{ once: true, margin: "-80px" }}
     transition={{ duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] }}
-    className={`group relative overflow-hidden rounded-[22px] border border-white/[0.06] bg-gradient-to-b from-white/[0.035] to-white/[0.01] p-5 backdrop-blur-xl ${className}`}
+    className={`group relative h-full overflow-hidden rounded-[22px] border border-slate-200/80 bg-white/80 p-5 shadow-[0_18px_50px_-30px_rgba(15,23,42,0.35)] backdrop-blur-xl transition-all hover:-translate-y-0.5 hover:border-cyan-300/70 hover:shadow-[0_24px_60px_-28px_rgba(6,182,212,0.45)] ${className}`}
   >
-    {/* top hairline */}
-    <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent" />
     {/* soft top glow */}
-    <div className="pointer-events-none absolute inset-x-0 -top-16 h-32 bg-[radial-gradient(closest-side,rgba(120,150,255,0.12),transparent_70%)]" />
+    <div className="pointer-events-none absolute inset-x-0 -top-16 h-32 bg-[radial-gradient(closest-side,rgba(6,182,212,0.16),transparent_70%)]" />
 
-    {/* icon badge — dark round pill with 1px inner ring */}
-    <div className="relative grid h-7 w-7 place-items-center rounded-full bg-[#0a0d16] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.08)]">
-      <Icon className="h-3.5 w-3.5 text-white/80" strokeWidth={1.75} />
+    {/* icon badge */}
+    <div className="relative grid h-9 w-9 place-items-center rounded-full bg-gradient-to-br from-cyan-500 to-sky-500 shadow-[0_8px_20px_-8px_rgba(6,182,212,0.8)]">
+      <Icon className="h-4 w-4 text-white" strokeWidth={2} />
     </div>
 
     <div className="mt-5">
-      <div className="font-display text-[17px] font-semibold leading-tight tracking-[-0.01em] text-white">
+      <div className="font-display text-[17px] font-semibold leading-tight tracking-[-0.01em] text-slate-900">
         {title}
       </div>
-      <div className="mt-1 font-display text-[17px] font-semibold leading-tight tracking-[-0.01em] text-white/45">
+      <div className="mt-1 font-display text-[17px] font-semibold leading-tight tracking-[-0.01em] text-slate-400">
         {desc}
       </div>
     </div>
   </motion.div>
 );
 
-/* Center logo tile — Knotch has a big black square with a soft radial glow
-   and the brand mark centered. */
+/* Center logo tile — deep navy square with a soft cyan glow and the brand mark centered. */
 const CenterLogoTile = () => (
   <motion.div
     initial={{ opacity: 0, scale: 0.92 }}
@@ -55,15 +52,14 @@ const CenterLogoTile = () => (
     className="relative h-full min-h-[220px]"
   >
     {/* outer glow */}
-    <div className="pointer-events-none absolute -inset-6 rounded-[36px] bg-[radial-gradient(closest-side,rgba(120,150,255,0.28),transparent_70%)]" />
-    <div className="relative h-full overflow-hidden rounded-[22px] border border-white/[0.08] bg-gradient-to-b from-[#0a0d16] to-[#050810]">
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-      <div className="pointer-events-none absolute inset-0 opacity-40 [background-image:radial-gradient(circle_at_center,rgba(255,255,255,0.4)_1px,transparent_1px)] [background-size:22px_22px] [mask-image:radial-gradient(closest-side,black,transparent_75%)]" />
+    <div className="pointer-events-none absolute -inset-6 rounded-[36px] bg-[radial-gradient(closest-side,rgba(6,182,212,0.28),transparent_70%)]" />
+    <div className="relative h-full overflow-hidden rounded-[22px] border border-slate-900/10 bg-gradient-to-b from-[#0b1220] to-[#0a1a2b] shadow-[0_30px_70px_-30px_rgba(15,23,42,0.6)]">
+      <div className="pointer-events-none absolute inset-0 opacity-30 [background-image:radial-gradient(circle_at_center,rgba(125,211,252,0.5)_1px,transparent_1px)] [background-size:22px_22px] [mask-image:radial-gradient(closest-side,black,transparent_75%)]" />
       <div className="relative grid h-full place-items-center p-6">
         <motion.div
           animate={{ y: [-3, 3, -3] }}
           transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-          className="grid h-16 w-16 place-items-center rounded-2xl bg-white/[0.02] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.1),0_0_60px_-5px_rgba(120,150,255,0.6)]"
+          className="grid h-16 w-16 place-items-center rounded-2xl bg-white/[0.06] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.14),0_0_60px_-5px_rgba(6,182,212,0.7)]"
         >
           <img
             src="/curezy logo.png"
@@ -82,8 +78,8 @@ export default function BenefitsCross() {
       <div className="container">
         <div className="mb-14 max-w-2xl">
           <div className="eyebrow mb-4">Benefits</div>
-          <h2 className="font-display text-4xl md:text-6xl font-semibold leading-[1.02] tracking-[-0.03em] text-white">
-            What makes Curezy <span className="text-white/40">better for your practice.</span>
+          <h2 className="font-display text-4xl md:text-6xl font-semibold leading-[1.02] tracking-[-0.03em] text-slate-900">
+            What makes Curezy <span className="text-slate-400">better for your practice.</span>
           </h2>
         </div>
 

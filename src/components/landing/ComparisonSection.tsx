@@ -16,9 +16,9 @@ export default function ComparisonSection() {
       <div className="container">
         <div className="mb-14 max-w-3xl">
           <div className="eyebrow mb-4">The shift</div>
-          <h2 className="font-display text-4xl md:text-6xl font-semibold leading-[1.02] tracking-[-0.03em] text-white">
+          <h2 className="font-display text-4xl md:text-6xl font-semibold leading-[1.02] tracking-[-0.03em] text-slate-900">
             The old care stack vs.{" "}
-            <span className="text-white/40">the Curezy operating system.</span>
+            <span className="text-slate-400">the Curezy operating system.</span>
           </h2>
         </div>
 
@@ -29,13 +29,13 @@ export default function ComparisonSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.6 }}
-            className="relative overflow-hidden rounded-[28px] border border-white/[0.05] bg-[#0a0d16]/60 p-7 md:p-9"
+            className="relative overflow-hidden rounded-[28px] border border-slate-200/80 bg-slate-50/80 p-7 md:p-9"
           >
             <div className="mb-6 flex items-center justify-between">
-              <div className="text-[11px] uppercase tracking-widest text-white/40">
+              <div className="text-[11px] uppercase tracking-widest text-slate-500">
                 Traditional care stack
               </div>
-              <span className="rounded-full border border-white/[0.06] px-2.5 py-1 text-[10px] uppercase tracking-widest text-white/40">
+              <span className="rounded-full border border-slate-200 bg-white px-2.5 py-1 text-[10px] uppercase tracking-widest text-slate-500">
                 Legacy
               </span>
             </div>
@@ -49,10 +49,10 @@ export default function ComparisonSection() {
                   transition={{ delay: i * 0.05 }}
                   className="flex items-start gap-3"
                 >
-                  <div className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-rose-500/10 text-rose-300">
+                  <div className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-rose-100 text-rose-500">
                     <X className="h-3.5 w-3.5" />
                   </div>
-                  <div className="text-sm text-white/50 line-through decoration-rose-500/40 decoration-[1.5px]">
+                  <div className="text-sm text-slate-500 line-through decoration-rose-400/60 decoration-[1.5px]">
                     {r.old}
                   </div>
                 </motion.li>
@@ -66,17 +66,16 @@ export default function ComparisonSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="relative overflow-hidden rounded-[28px] border border-white/[0.1] bg-gradient-to-b from-white/[0.06] to-white/[0.02] p-7 md:p-9"
+            className="relative overflow-hidden rounded-[28px] border border-cyan-200/70 bg-white p-7 shadow-[0_30px_70px_-40px_rgba(6,182,212,0.55)] md:p-9"
           >
-            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_60%_at_50%_0%,rgba(80,140,255,0.18),transparent_60%)]" />
-            <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent" />
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_60%_at_50%_0%,rgba(6,182,212,0.14),transparent_60%)]" />
             <div className="relative">
               <div className="mb-6 flex items-center justify-between">
-                <div className="flex items-center gap-2 text-[11px] uppercase tracking-widest text-white">
+                <div className="flex items-center gap-2 text-[11px] uppercase tracking-widest text-slate-900">
                   <img src="/curezy logo.png" alt="" className="h-4 w-auto object-contain" />
                   Curezy AI Care OS
                 </div>
-                <span className="rounded-full border border-[#7cd4ff]/40 bg-[#7cd4ff]/10 px-2.5 py-1 text-[10px] uppercase tracking-widest text-[#7cd4ff]">
+                <span className="rounded-full border border-cyan-300 bg-cyan-50 px-2.5 py-1 text-[10px] uppercase tracking-widest text-cyan-700">
                   Live
                 </span>
               </div>
@@ -90,10 +89,10 @@ export default function ComparisonSection() {
                     transition={{ delay: 0.1 + i * 0.05 }}
                     className="flex items-start gap-3"
                   >
-                    <div className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-gradient-to-br from-[#2563ff] to-[#7cd4ff] text-white shadow-[0_0_20px_rgba(80,140,255,0.5)]">
+                    <div className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-gradient-to-br from-cyan-500 to-sky-500 text-white shadow-[0_6px_16px_-6px_rgba(6,182,212,0.8)]">
                       <Check className="h-3.5 w-3.5" />
                     </div>
-                    <div className="text-sm font-medium text-white/90">{r.cur}</div>
+                    <div className="text-sm font-medium text-slate-800">{r.cur}</div>
                   </motion.li>
                 ))}
               </ul>

@@ -136,6 +136,7 @@ export type Database = {
       }
       appointment_slots: {
         Row: {
+          booked_by: string | null
           consultation_completed_at: string | null
           consultation_duration: number | null
           consultation_fee: number | null
@@ -160,6 +161,7 @@ export type Database = {
           user_id: string | null
         }
         Insert: {
+          booked_by?: string | null
           consultation_completed_at?: string | null
           consultation_duration?: number | null
           consultation_fee?: number | null
@@ -184,6 +186,7 @@ export type Database = {
           user_id?: string | null
         }
         Update: {
+          booked_by?: string | null
           consultation_completed_at?: string | null
           consultation_duration?: number | null
           consultation_fee?: number | null
@@ -233,6 +236,8 @@ export type Database = {
       }
       appointments: {
         Row: {
+          booked_via: string | null
+          confirmed_at: string | null
           consultation_completed_at: string | null
           consultation_duration: number | null
           consultation_started_at: string | null
@@ -256,8 +261,11 @@ export type Database = {
           time: string
           updated_at: string
           user_id: string
+          voice_call_id: string | null
         }
         Insert: {
+          booked_via?: string | null
+          confirmed_at?: string | null
           consultation_completed_at?: string | null
           consultation_duration?: number | null
           consultation_started_at?: string | null
@@ -281,8 +289,11 @@ export type Database = {
           time: string
           updated_at?: string
           user_id: string
+          voice_call_id?: string | null
         }
         Update: {
+          booked_via?: string | null
+          confirmed_at?: string | null
           consultation_completed_at?: string | null
           consultation_duration?: number | null
           consultation_started_at?: string | null
@@ -306,6 +317,7 @@ export type Database = {
           time?: string
           updated_at?: string
           user_id?: string
+          voice_call_id?: string | null
         }
         Relationships: [
           {
@@ -434,6 +446,72 @@ export type Database = {
           top_conditions?: string | null
         }
         Relationships: []
+      }
+      call_logs: {
+        Row: {
+          agent_name: string | null
+          agent_role: string | null
+          appointment_id: string | null
+          attempt_id: string | null
+          call_recording_url: string | null
+          created_at: string | null
+          duration_seconds: number | null
+          id: string
+          interaction_id: string | null
+          status: string | null
+          transcript_json: Json | null
+          updated_at: string | null
+          user_id: string | null
+          user_phone: string
+        }
+        Insert: {
+          agent_name?: string | null
+          agent_role?: string | null
+          appointment_id?: string | null
+          attempt_id?: string | null
+          call_recording_url?: string | null
+          created_at?: string | null
+          duration_seconds?: number | null
+          id?: string
+          interaction_id?: string | null
+          status?: string | null
+          transcript_json?: Json | null
+          updated_at?: string | null
+          user_id?: string | null
+          user_phone: string
+        }
+        Update: {
+          agent_name?: string | null
+          agent_role?: string | null
+          appointment_id?: string | null
+          attempt_id?: string | null
+          call_recording_url?: string | null
+          created_at?: string | null
+          duration_seconds?: number | null
+          id?: string
+          interaction_id?: string | null
+          status?: string | null
+          transcript_json?: Json | null
+          updated_at?: string | null
+          user_id?: string | null
+          user_phone?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "call_logs_appointment_id_fkey"
+            columns: ["appointment_id"]
+            isOneToOne: false
+            referencedRelation: "appointments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "call_logs_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       cart_order_broadcasts: {
         Row: {
@@ -2472,7 +2550,7 @@ export type Database = {
           emergency_contact_relationship?: string | null
           first_name?: string | null
           gender?: string | null
-          id: string
+          id?: string
           is_admin?: boolean | null
           is_doctor?: boolean | null
           language?: string | null
@@ -3047,6 +3125,196 @@ export type Database = {
             columns: ["vendor_id"]
             isOneToOne: false
             referencedRelation: "medicine_vendors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      voice_agent_appointments: {
+        Row: {
+          city: string
+          created_at: string | null
+          date: string
+          doctor_id: string | null
+          doctor_name: string
+          fee: number | null
+          id: string
+          interaction_id: string | null
+          notes: string | null
+          patient_name: string
+          patient_phone: string
+          sarvam_audio_url: string | null
+          sarvam_interaction_id: string | null
+          specialization: string
+          status: string | null
+          time: string
+        }
+        Insert: {
+          city: string
+          created_at?: string | null
+          date: string
+          doctor_id?: string | null
+          doctor_name: string
+          fee?: number | null
+          id?: string
+          interaction_id?: string | null
+          notes?: string | null
+          patient_name: string
+          patient_phone: string
+          sarvam_audio_url?: string | null
+          sarvam_interaction_id?: string | null
+          specialization: string
+          status?: string | null
+          time: string
+        }
+        Update: {
+          city?: string
+          created_at?: string | null
+          date?: string
+          doctor_id?: string | null
+          doctor_name?: string
+          fee?: number | null
+          id?: string
+          interaction_id?: string | null
+          notes?: string | null
+          patient_name?: string
+          patient_phone?: string
+          sarvam_audio_url?: string | null
+          sarvam_interaction_id?: string | null
+          specialization?: string
+          status?: string | null
+          time?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "voice_agent_appointments_doctor_id_fkey"
+            columns: ["doctor_id"]
+            isOneToOne: false
+            referencedRelation: "voice_agent_doctors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      voice_agent_call_logs: {
+        Row: {
+          agent_name: string | null
+          agent_variables: Json | null
+          audio_url: string | null
+          call_id: string | null
+          caller_phone: string | null
+          created_at: string | null
+          duration_seconds: number | null
+          id: string
+          interaction_id: string | null
+          num_messages: number | null
+          recording_url: string | null
+          summary: string | null
+          transcript: Json | null
+        }
+        Insert: {
+          agent_name?: string | null
+          agent_variables?: Json | null
+          audio_url?: string | null
+          call_id?: string | null
+          caller_phone?: string | null
+          created_at?: string | null
+          duration_seconds?: number | null
+          id?: string
+          interaction_id?: string | null
+          num_messages?: number | null
+          recording_url?: string | null
+          summary?: string | null
+          transcript?: Json | null
+        }
+        Update: {
+          agent_name?: string | null
+          agent_variables?: Json | null
+          audio_url?: string | null
+          call_id?: string | null
+          caller_phone?: string | null
+          created_at?: string | null
+          duration_seconds?: number | null
+          id?: string
+          interaction_id?: string | null
+          num_messages?: number | null
+          recording_url?: string | null
+          summary?: string | null
+          transcript?: Json | null
+        }
+        Relationships: []
+      }
+      voice_agent_doctors: {
+        Row: {
+          city: string
+          consultation_fee: number | null
+          created_at: string | null
+          experience_years: number | null
+          id: string
+          is_available: boolean | null
+          locality: string | null
+          name: string
+          rating: number | null
+          specialization: string
+        }
+        Insert: {
+          city: string
+          consultation_fee?: number | null
+          created_at?: string | null
+          experience_years?: number | null
+          id?: string
+          is_available?: boolean | null
+          locality?: string | null
+          name: string
+          rating?: number | null
+          specialization: string
+        }
+        Update: {
+          city?: string
+          consultation_fee?: number | null
+          created_at?: string | null
+          experience_years?: number | null
+          id?: string
+          is_available?: boolean | null
+          locality?: string | null
+          name?: string
+          rating?: number | null
+          specialization?: string
+        }
+        Relationships: []
+      }
+      voice_agent_slots: {
+        Row: {
+          created_at: string | null
+          date: string
+          doctor_id: string | null
+          end_time: string
+          id: string
+          is_booked: boolean | null
+          start_time: string
+        }
+        Insert: {
+          created_at?: string | null
+          date: string
+          doctor_id?: string | null
+          end_time: string
+          id?: string
+          is_booked?: boolean | null
+          start_time: string
+        }
+        Update: {
+          created_at?: string | null
+          date?: string
+          doctor_id?: string | null
+          end_time?: string
+          id?: string
+          is_booked?: boolean | null
+          start_time?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "voice_agent_slots_doctor_id_fkey"
+            columns: ["doctor_id"]
+            isOneToOne: false
+            referencedRelation: "voice_agent_doctors"
             referencedColumns: ["id"]
           },
         ]
