@@ -69,10 +69,10 @@ const MainLayout = () => {
       ]
     : [
         { name: "Dashboard", path: "/dashboard", icon: BarChart },
+        { name: "Appointments", path: "/appointments", icon: Calendar },
         { name: "Health Check", path: "/health-check", icon: Heart },
         { name: "Medical Reports", path: "/medical-reports", icon: FileText },
         { name: "My Records", path: "/my-medical-records", icon: FolderHeart },
-        { name: "Appointments", path: "/appointments", icon: Calendar },
         { name: "Medicine", path: "/medicine", icon: Pill },
         { name: "Emergency", path: "/emergency", icon: PhoneCall },
         { name: "Profile", path: "/profile", icon: User },
