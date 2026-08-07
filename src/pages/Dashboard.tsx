@@ -9,6 +9,7 @@ import { orderTrackingService } from "@/services/orderTrackingService";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { OrderStatusBadge } from "@/components/orders/OrderStatusBadge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import AIAgentSuite from "@/components/agents/AIAgentSuite";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -360,6 +361,11 @@ const Dashboard = () => {
             )}
           </CardContent>
         </Card>
+      </div>
+
+      {/* Eight Autonomous AI Agents Platform Suite */}
+      <div className="pt-4">
+        <AIAgentSuite />
       </div>
     </div>
   );
