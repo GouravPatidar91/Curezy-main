@@ -281,8 +281,8 @@ export default function PricingPreview() {
               <button
                 type="button"
                 onClick={() => setIsYearly(false)}
-                className={`relative z-10 flex-1 py-2 cursor-pointer rounded-full text-xs font-semibold text-center transition-colors duration-300 ${
-                  !isYearly ? "text-white" : "text-white/60 hover:text-white"
+                className={`relative z-10 flex-1 py-2 cursor-pointer rounded-full text-xs font-bold text-center transition-colors duration-300 ${
+                  !isYearly ? "text-pure-white" : "text-slate-600 hover:text-slate-900"
                 }`}
               >
                 Monthly
@@ -291,12 +291,12 @@ export default function PricingPreview() {
               <button
                 type="button"
                 onClick={() => setIsYearly(true)}
-                className={`relative z-10 flex-1 py-2 cursor-pointer rounded-full text-xs font-semibold text-center flex items-center justify-center gap-1 transition-colors duration-300 ${
-                  isYearly ? "text-white" : "text-white/60 hover:text-white"
+                className={`relative z-10 flex-1 py-2 cursor-pointer rounded-full text-xs font-bold text-center flex items-center justify-center gap-1 transition-colors duration-300 ${
+                  isYearly ? "text-pure-white" : "text-slate-600 hover:text-slate-900"
                 }`}
               >
-                Yearly
-                <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-white/20 text-white font-medium">
+                <span>Yearly</span>
+                <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-white/25 text-pure-white font-extrabold">
                   15% off
                 </span>
               </button>
