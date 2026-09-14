@@ -38,11 +38,11 @@ export default function LandingNav() {
         transition={{ duration: 0.5, ease: "easeOut" }}
         className="w-full max-w-[1080px] pointer-events-auto"
       >
-        <div className="rounded-full border border-slate-200/90 bg-white/95 sm:bg-white/90 backdrop-blur-xl flex items-center justify-between gap-2 sm:gap-4 pl-3.5 sm:pl-5 pr-1.5 sm:pr-2.5 py-1.5 sm:py-2 shadow-[0_8px_30px_-10px_rgba(15,23,42,0.12)]">
+        <div className="rounded-full border border-slate-200/90 bg-white/95 sm:bg-white/90 backdrop-blur-xl flex items-center justify-between gap-3 md:gap-4 pl-4 sm:pl-5 md:pl-6 pr-2 sm:pr-2.5 md:pr-3 py-1.5 sm:py-2 md:py-2.5 min-h-[48px] md:min-h-[60px] shadow-[0_8px_30px_-10px_rgba(15,23,42,0.12)]">
           {/* Brand Logo & Name */}
-          <Link to="/" className="flex items-center gap-2 shrink-0" aria-label="Curezy home">
-            <img src="/curezy logo.png" alt="Curezy" className="h-7 sm:h-8 w-auto object-contain shrink-0" />
-            <span className="font-display font-bold tracking-tight text-[15px] sm:text-base text-slate-900">
+          <Link to="/" className="flex items-center gap-2.5 shrink-0" aria-label="Curezy home">
+            <img src="/curezy logo.png" alt="Curezy" className="h-7 sm:h-8 md:h-9 w-auto object-contain shrink-0" />
+            <span className="font-display font-bold tracking-tight text-[15px] sm:text-base md:text-[17px] text-slate-900">
               Curezy
             </span>
           </Link>
@@ -54,7 +54,7 @@ export default function LandingNav() {
                 <Link
                   key={l.href}
                   to={l.href}
-                  className="px-3.5 py-1.5 text-[13px] font-medium text-slate-600 hover:text-slate-900 rounded-full transition-colors whitespace-nowrap"
+                  className="px-3.5 md:px-4 py-2 text-[13px] md:text-sm font-medium text-slate-600 hover:text-slate-900 rounded-full transition-colors whitespace-nowrap"
                 >
                   {l.label}
                 </Link>
@@ -63,7 +63,7 @@ export default function LandingNav() {
                   key={l.href}
                   href={l.href}
                   onClick={(e) => handleHashLink(e, l.href)}
-                  className="px-3.5 py-1.5 text-[13px] font-medium text-slate-600 hover:text-slate-900 rounded-full transition-colors whitespace-nowrap"
+                  className="px-3.5 md:px-4 py-2 text-[13px] md:text-sm font-medium text-slate-600 hover:text-slate-900 rounded-full transition-colors whitespace-nowrap"
                 >
                   {l.label}
                 </a>
@@ -72,11 +72,11 @@ export default function LandingNav() {
           </nav>
 
           {/* Action Buttons & Mobile Hamburger */}
-          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+          <div className="flex items-center gap-2 md:gap-2.5 shrink-0">
             <a
               href="/#contact"
               onClick={(e) => handleHashLink(e, "/#contact")}
-              className="hidden sm:inline-block text-[13px] font-semibold text-slate-700 hover:text-slate-900 px-3.5 py-1.5 rounded-full hover:bg-slate-100 transition-colors whitespace-nowrap"
+              className="hidden sm:inline-block text-[13px] md:text-sm font-semibold text-slate-700 hover:text-slate-900 px-3.5 md:px-4 py-2 rounded-full hover:bg-slate-100 transition-colors whitespace-nowrap"
             >
               Contact us
             </a>
@@ -84,7 +84,7 @@ export default function LandingNav() {
             <a
               href="/#contact"
               onClick={(e) => handleHashLink(e, "/#contact")}
-              className="btn-white-pill !py-1.5 sm:!py-2 !px-3.5 sm:!px-4 !text-xs sm:!text-[13px] !font-semibold whitespace-nowrap shrink-0 shadow-sm"
+              className="btn-white-pill !py-1.5 sm:!py-2 md:!py-2.5 !px-3.5 sm:!px-4 md:!px-6 !text-xs sm:!text-[13px] md:!text-sm !font-semibold whitespace-nowrap shrink-0 shadow-sm"
             >
               Book a demo
             </a>

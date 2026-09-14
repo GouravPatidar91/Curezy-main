@@ -46,7 +46,7 @@ export default function FinalCTA() {
             </form>
 
             <div className="mt-4">
-              <a href="mailto:admin@curezy.in?subject=Book%20a%20Demo" className="text-sm text-white/50 hover:text-white underline underline-offset-4">
+              <a href="mailto:contact@curezy.in?subject=Book%20a%20Demo" className="text-sm text-white/50 hover:text-white underline underline-offset-4">
                 Or book a demo →
               </a>
             </div>
