@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import { Github, Linkedin, Mail } from "lucide-react";
-import { openContactModal } from "@/components/landing/ContactModal";
 
 const cols = [
   {
@@ -18,7 +17,7 @@ const cols = [
     links: [
       { label: "About Us", href: "/about-us" },
       { label: "Pricing", href: "/pricing" },
-      { label: "Contact Us", href: "/contact-us" },
+      { label: "Contact Us", href: "/#contact" },
       { label: "Careers", href: "#careers" },
     ],
   },
@@ -86,15 +85,7 @@ export default function LandingFooter() {
               <ul className="space-y-2.5">
                 {c.links.map((l) => (
                   <li key={l.label}>
-                    {l.label === "Contact Us" ? (
-                      <button
-                        type="button"
-                        onClick={() => openContactModal()}
-                        className="text-sm text-white/70 hover:text-white transition-colors cursor-pointer text-left"
-                      >
-                        {l.label}
-                      </button>
-                    ) : l.href.startsWith("/") ? (
+                    {l.href.startsWith("/") ? (
                       <Link to={l.href} className="text-sm text-white/70 hover:text-white transition-colors">
                         {l.label}
                       </Link>

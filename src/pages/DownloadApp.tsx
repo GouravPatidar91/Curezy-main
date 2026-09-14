@@ -386,9 +386,9 @@ const DownloadApp = () => {
             <Link to="/terms-of-service" className="hover:text-blue-600">
               Terms
             </Link>
-            <Link to="/contact-us" className="hover:text-blue-600">
+            <a href="/#contact" className="hover:text-blue-600">
               Contact
-            </Link>
+            </a>
           </div>
         </div>
       </footer>
