@@ -353,6 +353,11 @@ export default function Pricing() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
+  // Scroll to top on mount
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+  }, []);
+
   // Automatic Geolocation Detection (No manual toggle)
   useEffect(() => {
     try {

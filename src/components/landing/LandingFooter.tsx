@@ -39,6 +39,21 @@ const cols = [
 ];
 
 export default function LandingFooter() {
+  const handleFooterLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (href.includes("#")) {
+      const [path, hash] = href.split("#");
+      const targetPath = path || "/";
+      if (window.location.pathname === targetPath) {
+        e.preventDefault();
+        const el = document.getElementById(hash);
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "start" });
+          window.history.pushState(null, "", href);
+        }
+      }
+    }
+  };
+
   return (
     <footer className="border-t border-white/[0.06]">
       <div className="container py-16">
@@ -85,14 +100,18 @@ export default function LandingFooter() {
               <ul className="space-y-2.5">
                 {c.links.map((l) => (
                   <li key={l.label}>
-                    {l.href.startsWith("/") ? (
+                    {l.href.includes("#") ? (
+                      <a
+                        href={l.href}
+                        onClick={(e) => handleFooterLinkClick(e, l.href)}
+                        className="text-sm text-white/70 hover:text-white transition-colors cursor-pointer"
+                      >
+                        {l.label}
+                      </a>
+                    ) : (
                       <Link to={l.href} className="text-sm text-white/70 hover:text-white transition-colors">
                         {l.label}
                       </Link>
-                    ) : (
-                      <a href={l.href} className="text-sm text-white/70 hover:text-white transition-colors">
-                        {l.label}
-                      </a>
                     )}
                   </li>
                 ))}

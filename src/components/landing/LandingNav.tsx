@@ -7,10 +7,23 @@ const links = [
   { label: "Pricing", href: "/#pricing" },
   { label: "Case study", href: "/#case" },
   { label: "FAQ", href: "/#faq" },
-  { label: "Contact", href: "/#contact" },
 ];
 
 export default function LandingNav() {
+  const handleHashLink = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (href.includes("#")) {
+      const [path, hash] = href.split("#");
+      if (window.location.pathname === (path || "/")) {
+        e.preventDefault();
+        const el = document.getElementById(hash);
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "start" });
+          window.history.pushState(null, "", href);
+        }
+      }
+    }
+  };
+
   return (
     <div className="fixed top-4 left-0 right-0 z-50 flex justify-center px-4">
       <motion.header
@@ -29,6 +42,7 @@ export default function LandingNav() {
               <a
                 key={l.href}
                 href={l.href}
+                onClick={(e) => handleHashLink(e, l.href)}
                 className="px-3 py-1.5 text-[13px] font-medium text-white/60 hover:text-white rounded-full transition-colors whitespace-nowrap"
               >
                 {l.label}
@@ -38,11 +52,16 @@ export default function LandingNav() {
           <div className="flex items-center gap-2 justify-self-end">
             <a
               href="/#contact"
+              onClick={(e) => handleHashLink(e, "/#contact")}
               className="text-[13px] font-medium text-white/80 hover:text-white px-3.5 py-1.5 rounded-full hover:bg-white/10 transition-colors whitespace-nowrap"
             >
               Contact us
             </a>
-            <a href="#contact" className="btn-white-pill text-[13px]">
+            <a
+              href="/#contact"
+              onClick={(e) => handleHashLink(e, "/#contact")}
+              className="btn-white-pill text-[13px]"
+            >
               Book a demo
             </a>
           </div>
