@@ -38,11 +38,11 @@ export default function LandingNav() {
         transition={{ duration: 0.5, ease: "easeOut" }}
         className="w-full max-w-[1080px] pointer-events-auto"
       >
-        <div className="rounded-full border border-slate-200/90 bg-white/95 sm:bg-white/90 backdrop-blur-xl flex items-center justify-between gap-3 md:gap-4 pl-4 sm:pl-5 md:pl-6 pr-2 sm:pr-2.5 md:pr-3 py-1.5 sm:py-2 md:py-2.5 min-h-[48px] md:min-h-[60px] shadow-[0_8px_30px_-10px_rgba(15,23,42,0.12)]">
+        <div className="rounded-full border border-slate-200/90 bg-white/95 sm:bg-white/90 backdrop-blur-xl flex items-center justify-between gap-3 md:gap-4 pl-4 sm:pl-5 md:pl-6 pr-2.5 sm:pr-3 md:pr-4 py-2.5 sm:py-3 min-h-[56px] sm:min-h-[60px] md:min-h-[64px] shadow-[0_8px_30px_-10px_rgba(15,23,42,0.12)]">
           {/* Brand Logo & Name */}
           <Link to="/" className="flex items-center gap-2.5 shrink-0" aria-label="Curezy home">
-            <img src="/curezy logo.png" alt="Curezy" className="h-7 sm:h-8 md:h-9 w-auto object-contain shrink-0" />
-            <span className="font-display font-bold tracking-tight text-[15px] sm:text-base md:text-[17px] text-slate-900">
+            <img src="/curezy logo.png" alt="Curezy" className="h-8 sm:h-9 w-auto object-contain shrink-0" />
+            <span className="font-display font-bold tracking-tight text-base sm:text-[17px] text-slate-900">
               Curezy
             </span>
           </Link>
@@ -84,7 +84,7 @@ export default function LandingNav() {
             <a
               href="/#contact"
               onClick={(e) => handleHashLink(e, "/#contact")}
-              className="btn-white-pill !py-1.5 sm:!py-2 md:!py-2.5 !px-3.5 sm:!px-4 md:!px-6 !text-xs sm:!text-[13px] md:!text-sm !font-semibold whitespace-nowrap shrink-0 shadow-sm"
+              className="btn-white-pill !py-2.5 sm:!py-2.5 md:!py-3 !px-4 sm:!px-5 md:!px-6 !text-xs sm:!text-[13px] md:!text-sm !font-semibold whitespace-nowrap shrink-0 shadow-sm"
             >
               Book a demo
             </a>
@@ -93,7 +93,7 @@ export default function LandingNav() {
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden w-8 h-8 rounded-full flex items-center justify-center text-slate-700 hover:bg-slate-100 transition-colors shrink-0"
+              className="md:hidden w-9 h-9 rounded-full flex items-center justify-center text-slate-700 hover:bg-slate-100 transition-colors shrink-0"
               aria-label="Toggle navigation menu"
             >
               {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
