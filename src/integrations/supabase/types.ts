@@ -14,6 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
+      contact_submissions: {
+        Row: {
+          created_at: string | null
+          email: string
+          id: string
+          message: string | null
+          name: string
+          organization: string | null
+          phone: string
+          role: string | null
+          service_interest: string | null
+          status: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          id?: string
+          message?: string | null
+          name: string
+          organization?: string | null
+          phone: string
+          role?: string | null
+          service_interest?: string | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          id?: string
+          message?: string | null
+          name?: string
+          organization?: string | null
+          phone?: string
+          role?: string | null
+          service_interest?: string | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       admin_broadcast_notifications: {
         Row: {
           ai_prompt: string | null
