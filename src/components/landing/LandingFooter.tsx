@@ -16,7 +16,8 @@ const cols = [
     title: "Company",
     links: [
       { label: "About Us", href: "/about-us" },
-      { label: "Contact Sales", href: "mailto:sales@curezy.in" },
+      { label: "Pricing", href: "/pricing" },
+      { label: "Contact Us", href: "/contact-us" },
       { label: "Careers", href: "#careers" },
     ],
   },

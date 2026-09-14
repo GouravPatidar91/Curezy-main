@@ -10,7 +10,9 @@ import CaseStudy from "@/components/landing/CaseStudy";
 import ImpactStats from "@/components/landing/ImpactStats";
 import Testimonials from "@/components/landing/Testimonials";
 import SecuritySection from "@/components/landing/SecuritySection";
+import PricingPreview from "@/components/landing/PricingPreview";
 import FAQSection from "@/components/landing/FAQSection";
+import ContactSection from "@/components/landing/ContactSection";
 import FinalCTA from "@/components/landing/FinalCTA";
 import LandingFooter from "@/components/landing/LandingFooter";
 
@@ -29,7 +31,9 @@ export default function Homepage() {
         <ImpactStats />
         <Testimonials />
         <SecuritySection />
+        <PricingPreview />
         <FAQSection />
+        <ContactSection id="contact" />
         <FinalCTA />
       </main>
       <LandingFooter />

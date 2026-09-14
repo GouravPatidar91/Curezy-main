@@ -42,7 +42,7 @@ export default function Hero() {
             transition={{ duration: 0.7, delay: 0.25 }}
             className="mt-10 flex flex-wrap items-center justify-center gap-3"
           >
-            <a href="#cta" className="btn-white-pill">
+            <a href="#contact" className="btn-white-pill">
               Book a demo <ArrowRight className="w-4 h-4" />
             </a>
             <a href="#solutions" className="btn-glass-pill">

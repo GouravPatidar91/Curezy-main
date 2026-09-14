@@ -2,10 +2,12 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
 const links = [
-  { label: "How it works", href: "#how" },
-  { label: "Solutions", href: "#solutions" },
-  { label: "Case study", href: "#case" },
-  { label: "FAQ", href: "#faq" },
+  { label: "How it works", href: "/#how" },
+  { label: "Solutions", href: "/#solutions" },
+  { label: "Pricing", href: "/#pricing" },
+  { label: "Case study", href: "/#case" },
+  { label: "FAQ", href: "/#faq" },
+  { label: "Contact", href: "/contact-us" },
 ];
 
 export default function LandingNav() {
@@ -34,10 +36,15 @@ export default function LandingNav() {
             ))}
           </nav>
           <div className="flex items-center gap-2 justify-self-end">
-            <Link to="/login" className="hidden sm:inline text-[13px] font-medium text-white/60 hover:text-white px-3 whitespace-nowrap">
-              Sign in
+            <Link
+              to="/contact-us"
+              className="text-[13px] font-medium text-white/80 hover:text-white px-3.5 py-1.5 rounded-full hover:bg-white/10 transition-colors whitespace-nowrap"
+            >
+              Contact us
             </Link>
-            <a href="#cta" className="btn-white-pill text-[13px]">Book a demo</a>
+            <a href="#contact" className="btn-white-pill text-[13px]">
+              Book a demo
+            </a>
           </div>
         </div>
       </motion.header>
