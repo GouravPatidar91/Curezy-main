@@ -1,36 +1,46 @@
 import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { 
-  Calendar, 
-  Users, 
-  Phone as PhoneIcon, 
-  TrendingUp, 
-  Sparkles, 
-  Plus, 
-  Bot, 
-  Clock, 
-  PhoneCall, 
-  FileText, 
-  BarChart3, 
-  CheckCircle2, 
-  ShieldCheck, 
-  Activity 
-} from "lucide-react";
+import { Activity, Calendar, Users, AlertTriangle, ArrowRight, Phone as PhoneIcon, TrendingUp, Heart, Zap, Plus, Sparkles, Package } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { useUserAppointments, useUserProfile } from "@/services/userDataService";
+import { useUserStats, useUserAppointments, useUserHealthChecks, useUserProfile } from "@/services/userDataService";
+import { orderTrackingService } from "@/services/orderTrackingService";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
+import { OrderStatusBadge } from "@/components/orders/OrderStatusBadge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import AIAgentSuite, { AgentTabType } from "@/components/agents/AIAgentSuite";
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { stats, loading: statsLoading } = useUserStats();
   const { appointments, loading: appointmentsLoading } = useUserAppointments();
+  const { healthChecks, loading: healthChecksLoading } = useUserHealthChecks();
   const { profile } = useUserProfile();
-  const [selectedAgentTab, setSelectedAgentTab] = useState<AgentTabType>("overview");
+  const [activeOrders, setActiveOrders] = useState<any[]>([]);
+  const [ordersLoading, setOrdersLoading] = useState(true);
 
+  useEffect(() => {
+    if (user) {
+      loadActiveOrders();
+    }
+  }, [user]);
+
+  const loadActiveOrders = async () => {
+    try {
+      setOrdersLoading(true);
+      const orders = await orderTrackingService.getUserOrders(user!.id);
+      const active = orders.filter(order => 
+        ['placed', 'confirmed', 'preparing', 'ready_for_pickup', 'out_for_delivery'].includes(order.order_status)
+      );
+      setActiveOrders(active);
+    } catch (error) {
+      console.error('Error loading orders:', error);
+    } finally {
+      setOrdersLoading(false);
+    }
+  };
+  
   const userName = profile?.first_name || 
                    user?.user_metadata?.name || 
                    user?.email?.split('@')[0] || 
@@ -39,182 +49,317 @@ const Dashboard = () => {
   const userInitials = profile?.first_name && profile?.last_name 
     ? `${profile.first_name[0]}${profile.last_name[0]}`.toUpperCase()
     : userName[0]?.toUpperCase() || 'U';
+  
+  const now = new Date();
+  
+  const upcomingAppointment = !appointmentsLoading && appointments.length > 0
+    ? appointments.find(apt => {
+        if (apt.status === 'cancelled') return false;
+        const aptDateTime = new Date(`${apt.date}T${apt.time}`);
+        return aptDateTime >= now;
+      })
+    : null;
 
-  const appointmentCount = appointments ? appointments.length : 24;
+  const recentAppointment = upcomingAppointment || {
+    doctor_name: "Dr. Sarah Johnson",
+    doctor_specialty: "General Practitioner",
+    date: "2023-10-15",
+    time: "10:00:00",
+  };
+
+  const latestHealthCheck = !healthChecksLoading && healthChecks.length > 0
+    ? healthChecks[0]
+    : null;
+  
+  const determineHealthStatus = () => {
+    if (!latestHealthCheck) return { status: "Unknown", color: "text-slate-600" };
+    
+    if (latestHealthCheck.analysis_results && latestHealthCheck.analysis_results.length > 0) {
+      const highestMatch = latestHealthCheck.analysis_results.reduce(
+        (highest, current) => current.matchScore > highest.matchScore ? current : highest,
+        latestHealthCheck.analysis_results[0]
+      );
+      
+      if (highestMatch.matchScore >= 75) {
+        return { 
+          status: "Attention Needed", 
+          color: "text-red-500",
+          condition: highestMatch.name
+        };
+      } else if (highestMatch.matchScore >= 50) {
+        return { 
+          status: "Monitor", 
+          color: "text-yellow-500",
+          condition: highestMatch.name
+        };
+      }
+    }
+    
+    if (latestHealthCheck.severity) {
+      switch (latestHealthCheck.severity.toLowerCase()) {
+        case "severe":
+          return { status: "Attention Needed", color: "text-red-500" };
+        case "moderate":
+          return { status: "Monitor", color: "text-yellow-500" };
+        case "mild":
+          return { status: "Good", color: "text-emerald-500" };
+        default:
+          return { status: "Good", color: "text-emerald-500" };
+      }
+    }
+    
+    return { status: "Good", color: "text-emerald-500" };
+  };
+
+  const countAlerts = () => {
+    if (healthChecksLoading || !healthChecks.length) return 0;
+    
+    let alertCount = 0;
+    
+    if (latestHealthCheck) {
+      if (latestHealthCheck.severity === 'severe') {
+        alertCount += 1;
+      }
+      
+      if (latestHealthCheck.analysis_results && latestHealthCheck.analysis_results.length > 0) {
+        alertCount += latestHealthCheck.analysis_results
+          .filter(result => result.matchScore >= 75)
+          .length;
+      }
+    }
+    
+    return alertCount;
+  };
+
+  const healthStatus = determineHealthStatus();
+  const alertCount = countAlerts();
+
+  // Function to navigate to appointments with my-appointments tab
+  const navigateToMyAppointments = () => {
+    navigate('/appointments');
+    // We'll need to update the appointments page to handle URL hash for tab navigation
+    window.location.hash = '#my-appointments';
+  };
 
   return (
     <div className="space-y-8">
-      {/* Executive AI Platform Header */}
-      <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-600 rounded-3xl p-6 md:p-8 text-white relative overflow-hidden shadow-2xl">
-        <div className="absolute top-0 right-0 -mt-8 -mr-8 w-64 h-64 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
-        <div className="absolute bottom-0 left-1/3 -mb-10 w-72 h-72 bg-cyan-400/10 rounded-full blur-3xl pointer-events-none"></div>
-
+      {/* Modern Welcome Header */}
+      <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-3xl p-8 text-white relative overflow-hidden">
+        <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-white/10 rounded-full"></div>
+        <div className="absolute bottom-0 left-0 -mb-8 -ml-8 w-32 h-32 bg-white/5 rounded-full"></div>
         <div className="relative z-10 flex flex-wrap items-center justify-between gap-6">
           <div className="flex items-center gap-4">
-            <Avatar className="h-16 w-16 border-2 border-white/40 shadow-xl ring-4 ring-white/10">
+            <Avatar className="h-16 w-16 border-2 border-white/30 shadow-lg">
               <AvatarImage src={profile?.avatar_url || ""} alt="Profile" />
-              <AvatarFallback className="bg-white/20 text-white text-xl font-bold backdrop-blur-md">
+              <AvatarFallback className="bg-white/20 text-white text-xl font-bold">
                 {userInitials}
               </AvatarFallback>
             </Avatar>
             <div className="space-y-1">
               <div className="flex items-center gap-2">
-                <Sparkles className="h-5 w-5 text-cyan-300 animate-pulse" />
-                <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight">
+                <Sparkles className="h-5 w-5 text-blue-200" />
+                <h1 className="text-2xl md:text-3xl font-bold">
                   Welcome back, {userName}
                 </h1>
               </div>
-              <p className="text-blue-100 text-xs md:text-sm font-medium max-w-xl">
-                Curezy AI Healthcare Platform — 8 Autonomous AI Agents Operational
+              <p className="text-blue-100 text-base max-w-2xl">
+                Track your health journey with intelligent insights
               </p>
             </div>
           </div>
-
-          <div className="flex items-center gap-3 flex-wrap">
-            <Button 
-              onClick={() => setSelectedAgentTab('appointment')}
-              className="bg-white text-blue-900 hover:bg-slate-100 flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs shadow-lg"
-            >
-              <Plus className="h-4 w-4 text-blue-700" />
-              Book Appointment
-            </Button>
-            <Button 
-              onClick={() => navigate('/emergency')}
-              className="bg-rose-500 hover:bg-rose-600 text-white flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-semibold shadow-lg"
-            >
-              <PhoneIcon className="h-4 w-4" />
-              Emergency SOS
-            </Button>
-          </div>
+          
+          <Button 
+            onClick={() => navigate('/emergency')}
+            className="bg-red-500 hover:bg-red-600 text-white flex items-center gap-2 px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all"
+            size="lg"
+          >
+            <PhoneIcon className="h-5 w-5" />
+            Emergency
+          </Button>
         </div>
       </div>
 
-      {/* 4 Operational Healthcare & AI Metric Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Metric 1 */}
-        <Card className="bg-white border-slate-200/90 shadow-sm hover:shadow-md transition-shadow">
-          <CardContent className="p-5">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Doctor Appointments</span>
-              <div className="p-2.5 rounded-xl bg-emerald-50 text-emerald-600">
-                <Calendar className="w-5 h-5" />
-              </div>
+      {/* Health Alert */}
+      {latestHealthCheck && healthStatus.status === "Attention Needed" && (
+        <Alert className="border-red-200 bg-gradient-to-r from-red-50 to-pink-50 rounded-2xl border-2">
+          <AlertTriangle className="h-5 w-5 text-red-600" />
+          <AlertTitle className="text-red-700 font-semibold text-lg">Health Alert</AlertTitle>
+          <AlertDescription className="text-red-600 text-base">
+            Your recent health check indicates attention is needed
+            {healthStatus.condition && ` for potential "${healthStatus.condition}"`}.
+            Please consider consulting a healthcare professional.
+          </AlertDescription>
+        </Alert>
+      )}
+
+      {/* Modern Stats Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <Card className="bg-white/60 backdrop-blur-md border-blue-100/50 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 group">
+          <CardHeader className="flex flex-row items-center justify-between pb-3">
+            <CardTitle className="text-sm font-medium text-gray-600">Health Status</CardTitle>
+            <div className="p-3 bg-gradient-to-r from-blue-400 to-blue-500 rounded-xl group-hover:from-blue-500 group-hover:to-blue-600 transition-all">
+              <Activity className="h-5 w-5 text-white" />
             </div>
-            <p className="text-3xl font-black text-slate-900 mt-3">{appointmentCount}</p>
-            <div className="flex items-center justify-between text-xs text-slate-500 mt-2 pt-2 border-t border-slate-100">
-              <span className="text-emerald-600 font-medium">18 Confirmed Today</span>
-              <span>4 Pending</span>
-            </div>
+          </CardHeader>
+          <CardContent>
+            <div className={`text-2xl font-bold ${healthStatus.color} mb-1`}>{healthStatus.status}</div>
+            <p className="text-xs text-gray-500">
+              {latestHealthCheck 
+                ? `Last check: ${new Date(latestHealthCheck.created_at || '').toLocaleDateString()}` 
+                : "No recent checks"}
+            </p>
           </CardContent>
         </Card>
-
-        {/* Metric 2 */}
-        <Card className="bg-white border-slate-200/90 shadow-sm hover:shadow-md transition-shadow">
-          <CardContent className="p-5">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">AI Call Telemetry</span>
-              <div className="p-2.5 rounded-xl bg-purple-50 text-purple-600">
-                <PhoneCall className="w-5 h-5" />
-              </div>
+        
+        <Card className="bg-white/60 backdrop-blur-md border-green-100/50 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 group">
+          <CardHeader className="flex flex-row items-center justify-between pb-3">
+            <CardTitle className="text-sm font-medium text-gray-600">Appointments</CardTitle>
+            <div className="p-3 bg-gradient-to-r from-emerald-400 to-emerald-500 rounded-xl group-hover:from-emerald-500 group-hover:to-emerald-600 transition-all">
+              <Calendar className="h-5 w-5 text-white" />
             </div>
-            <p className="text-3xl font-black text-slate-900 mt-3">1,240 Mins</p>
-            <div className="flex items-center justify-between text-xs text-slate-500 mt-2 pt-2 border-t border-slate-100">
-              <span className="text-purple-600 font-medium">1m 45s Avg Call</span>
-              <span>100% Transcribed</span>
-            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-gray-900 mb-1">{statsLoading ? "..." : stats.upcomingAppointments}</div>
+            <p className="text-xs text-gray-500">
+              {upcomingAppointment ? `Next: ${upcomingAppointment.date}` : "None scheduled"}
+            </p>
           </CardContent>
         </Card>
-
-        {/* Metric 3 */}
-        <Card className="bg-white border-slate-200/90 shadow-sm hover:shadow-md transition-shadow">
-          <CardContent className="p-5">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Patient Leads & Inquiries</span>
-              <div className="p-2.5 rounded-xl bg-blue-50 text-blue-600">
-                <Users className="w-5 h-5" />
-              </div>
+        
+        <Card 
+          className="bg-white/60 backdrop-blur-md border-purple-100/50 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer group" 
+          onClick={() => navigate('/health-check-history')}
+        >
+          <CardHeader className="flex flex-row items-center justify-between pb-3">
+            <CardTitle className="text-sm font-medium text-gray-600">Health Checks</CardTitle>
+            <div className="p-3 bg-gradient-to-r from-purple-400 to-purple-500 rounded-xl group-hover:from-purple-500 group-hover:to-purple-600 transition-all">
+              <TrendingUp className="h-5 w-5 text-white" />
             </div>
-            <p className="text-3xl font-black text-slate-900 mt-3">182 Leads</p>
-            <div className="flex items-center justify-between text-xs text-slate-500 mt-2 pt-2 border-t border-slate-100">
-              <span className="text-blue-600 font-medium">78% Qualified Rate</span>
-              <span>WhatsApp & Voice</span>
-            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-gray-900 mb-1">{statsLoading ? "..." : stats.healthChecksCount}</div>
+            <p className="text-xs text-gray-500">
+              {stats.healthChecksCount > 0 ? "View history" : "Start tracking"}
+            </p>
           </CardContent>
         </Card>
-
-        {/* Metric 4 */}
-        <Card className="bg-white border-slate-200/90 shadow-sm hover:shadow-md transition-shadow">
-          <CardContent className="p-5">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Autonomous AI Agents</span>
-              <div className="p-2.5 rounded-xl bg-cyan-50 text-cyan-600">
-                <Bot className="w-5 h-5" />
-              </div>
+        
+        <Card 
+          className={`bg-white/60 backdrop-blur-md rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer group ${
+            alertCount > 0 ? 'border-red-200 bg-gradient-to-br from-red-50/50 to-pink-50/50' : 'border-gray-100/50'
+          }`}
+          onClick={() => navigate('/health-check-history')}
+        >
+          <CardHeader className="flex flex-row items-center justify-between pb-3">
+            <CardTitle className="text-sm font-medium text-gray-600">Alerts</CardTitle>
+            <div className={`p-3 rounded-xl transition-all ${
+              alertCount > 0 
+                ? 'bg-gradient-to-r from-red-400 to-red-500 group-hover:from-red-500 group-hover:to-red-600' 
+                : 'bg-gradient-to-r from-gray-400 to-gray-500 group-hover:from-gray-500 group-hover:to-gray-600'
+            }`}>
+              <AlertTriangle className="h-5 w-5 text-white" />
             </div>
-            <p className="text-3xl font-black text-slate-900 mt-3">8 / 8 Active</p>
-            <div className="flex items-center justify-between text-xs text-slate-500 mt-2 pt-2 border-t border-slate-100">
-              <span className="text-cyan-600 font-medium">100% Operational</span>
-              <span>Real-time Synced</span>
-            </div>
+          </CardHeader>
+          <CardContent>
+            <div className={`text-2xl font-bold mb-1 ${alertCount > 0 ? 'text-red-500' : 'text-gray-900'}`}>{alertCount}</div>
+            <p className="text-xs text-gray-500">
+              {alertCount > 0 ? "Need attention" : "All clear"}
+            </p>
           </CardContent>
         </Card>
       </div>
 
-      {/* Quick Action Control Bar */}
-      <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
-        <div className="flex items-center justify-between gap-3 overflow-x-auto pb-1 scrollbar-none">
-          <div className="flex items-center gap-2 text-xs font-bold text-slate-700 whitespace-nowrap pr-2">
-            <Activity className="w-4 h-4 text-cyan-600" />
-            <span>Quick Agent Shortcuts:</span>
-          </div>
-
-          <div className="flex items-center gap-2 overflow-x-auto">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setSelectedAgentTab('appointment')}
-              className="gap-2 rounded-xl text-xs border-slate-200 hover:bg-emerald-50 text-emerald-700 whitespace-nowrap"
+      {/* Action Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <Card className="bg-white/60 backdrop-blur-md border-blue-100/50 rounded-2xl shadow-lg">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-3 text-xl">
+              <div className="p-3 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl shadow-lg">
+                <Zap className="h-6 w-6 text-white" />
+              </div>
+              Quick Actions
+            </CardTitle>
+            <CardDescription className="text-gray-600">Essential health management tools</CardDescription>
+          </CardHeader>
+          <CardContent className="grid gap-4">
+            <Button 
+              className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white flex justify-between items-center rounded-xl py-6 text-lg shadow-lg hover:shadow-xl transition-all" 
+              onClick={() => navigate('/health-check')}
             >
-              <Calendar className="w-3.5 h-3.5" />
-              <span>Book Appointment & View Schedule</span>
+              <span>Start Health Check</span>
+              <Plus className="h-5 w-5" />
             </Button>
-
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setSelectedAgentTab('appointment')}
-              className="gap-2 rounded-xl text-xs border-slate-200 hover:bg-purple-50 text-purple-700 whitespace-nowrap"
+            <Button 
+              variant="outline" 
+              className="flex justify-between items-center border-2 border-blue-200 text-blue-600 hover:bg-blue-50 rounded-xl py-6 text-lg hover:border-blue-300 transition-all"
+              onClick={() => navigate('/appointments')}
             >
-              <FileText className="w-3.5 h-3.5" />
-              <span>Call Transcriptions & Audio Recordings</span>
+              <span>Book Appointment</span>
+              <ArrowRight className="h-5 w-5" />
             </Button>
-
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setSelectedAgentTab('outbound')}
-              className="gap-2 rounded-xl text-xs border-slate-200 hover:bg-blue-50 text-blue-700 whitespace-nowrap"
+            <Button 
+              variant="outline" 
+              className="flex justify-between items-center border-2 border-gray-200 text-gray-700 hover:bg-gray-50 rounded-xl py-6 text-lg hover:border-gray-300 transition-all"
+              onClick={() => navigate('/health-check-history')}
             >
-              <PhoneCall className="w-3.5 h-3.5" />
-              <span>Outbound Patient Outreach</span>
+              <span>View History</span>
+              <ArrowRight className="h-5 w-5" />
             </Button>
+          </CardContent>
+        </Card>
 
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setSelectedAgentTab('analytics')}
-              className="gap-2 rounded-xl text-xs border-slate-200 hover:bg-indigo-50 text-indigo-700 whitespace-nowrap"
-            >
-              <BarChart3 className="w-3.5 h-3.5" />
-              <span>Revenue Attribution Analytics</span>
-            </Button>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Eight Autonomous AI Agents Platform Workspace */}
-      <div className="pt-2">
-        <AIAgentSuite defaultTab={selectedAgentTab} />
+        {/* My Orders Section */}
+        <Card className="bg-white/60 backdrop-blur-md border-purple-100/50 rounded-2xl shadow-lg">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-3 text-xl">
+              <div className="p-3 bg-gradient-to-r from-purple-400 to-purple-500 rounded-xl shadow-lg">
+                <Package className="h-6 w-6 text-white" />
+              </div>
+              My Orders
+            </CardTitle>
+            <CardDescription className="text-gray-600">Track your medicine orders</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {ordersLoading ? (
+              <p className="text-center text-gray-500 py-8">Loading orders...</p>
+            ) : activeOrders.length > 0 ? (
+              <div className="space-y-4">
+                {activeOrders.slice(0, 2).map((order) => (
+                  <div key={order.id} className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-4">
+                    <div className="flex justify-between items-start mb-2">
+                      <div>
+                        <p className="font-semibold text-gray-900">Order #{order.order_number}</p>
+                        <p className="text-sm text-gray-600">{order.vendor.pharmacy_name}</p>
+                      </div>
+                      <OrderStatusBadge status={order.order_status} />
+                    </div>
+                    <p className="text-sm text-gray-700 font-semibold">₹{order.final_amount}</p>
+                  </div>
+                ))}
+                <Button 
+                  variant="outline" 
+                  className="w-full border-2 border-purple-200 text-purple-600 hover:bg-purple-50 rounded-xl py-3 hover:border-purple-300 transition-all"
+                  onClick={() => navigate('/my-orders')}
+                >
+                  View All Orders
+                </Button>
+              </div>
+            ) : (
+              <div className="text-center py-8">
+                <div className="p-6 bg-gradient-to-br from-gray-50 to-purple-50 rounded-2xl mb-6 inline-block">
+                  <Package className="h-16 w-16 text-gray-400" />
+                </div>
+                <p className="text-gray-600 mb-6 text-lg">No active orders</p>
+                <Button 
+                  className="bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white rounded-xl px-8 py-3 shadow-lg hover:shadow-xl transition-all"
+                  onClick={() => navigate('/medicine')}
+                >
+                  Order Medicines
+                </Button>
+              </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

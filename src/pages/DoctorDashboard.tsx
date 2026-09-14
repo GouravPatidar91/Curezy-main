@@ -8,8 +8,6 @@ import AppointmentSlots from '@/components/doctor/AppointmentSlots';
 import DoctorNotifications from '@/components/doctor/DoctorNotifications';
 import DoctorWallet from '@/components/doctor/DoctorWallet';
 import DoctorFeeSettings from '@/components/doctor/DoctorFeeSettings';
-import AIAgentSuite from '@/components/agents/AIAgentSuite';
-import { Sparkles } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from "@/integrations/supabase/client";
@@ -87,11 +85,7 @@ const DoctorDashboard = () => {
         </div>
 
         <Tabs defaultValue="calendar" value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className={`${isMobile ? 'grid grid-cols-3 h-auto gap-1 bg-muted/60 p-1' : 'grid grid-cols-6'} w-full max-w-4xl`}>
-            <TabsTrigger value="ai-agents" className="text-xs md:text-sm font-bold text-cyan-700 data-[state=active]:bg-cyan-600 data-[state=active]:text-white">
-              <Sparkles className="w-3.5 h-3.5 mr-1 inline" />
-              AI Agents Suite
-            </TabsTrigger>
+          <TabsList className={`${isMobile ? 'grid grid-cols-2 h-auto gap-1 bg-muted/60 p-1' : 'grid grid-cols-5'} w-full max-w-3xl`}>
             <TabsTrigger value="calendar" className="text-xs md:text-sm">
               Calendar
             </TabsTrigger>
@@ -155,10 +149,6 @@ const DoctorDashboard = () => {
                 <DoctorWallet />
               </CardContent>
             </Card>
-          </TabsContent>
-
-          <TabsContent value="ai-agents">
-            <AIAgentSuite doctorId={user.id} />
           </TabsContent>
 
           <TabsContent value="fee-settings">

@@ -5,6 +5,7 @@ const cols = [
   {
     title: "Platform",
     links: [
+      { label: "AI Medical Imaging", href: "#solutions" },
       { label: "WhatsApp Automation", href: "#solutions" },
       { label: "AI Voice Agents", href: "#solutions" },
       { label: "EMR Integrations", href: "#solutions" },

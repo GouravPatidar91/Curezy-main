@@ -1,5 +1,25 @@
-import { motion } from "framer-motion";
-import { PhoneCall, Mail, MessageCircle, Phone, Smartphone, Instagram, Linkedin, Bot, Check, X, ChevronRight, Search } from "lucide-react";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  PhoneCall,
+  Mail,
+  MessageCircle,
+  Phone,
+  Smartphone,
+  Instagram,
+  Linkedin,
+  Bot,
+  Check,
+  X,
+  ChevronRight,
+  Search,
+  Scan,
+  Activity,
+  Layers,
+  Sparkles,
+  Eye,
+  Cpu,
+} from "lucide-react";
 
 /* -----------------------------------------------------------
    Shared card shell — light glass tile on the cosmic light theme
@@ -118,7 +138,234 @@ const VoiceMock = () => (
 );
 
 /* -----------------------------------------------------------
-   Card 3 — Care Analytics
+   Card 3 — AI Medical Imaging (Real Clinical Diagnostic Viewer)
+------------------------------------------------------------ */
+const scanModes = [
+  {
+    id: "volume3d",
+    label: "3D Volume (VISTA-3D)",
+    sub: "Cinematic 3D Organ Reconstruction",
+    image: "/imaging/vista3d_volume.jpg",
+    modality: "VISTA-3D · Full Torso",
+    window: "3D Volumetric Mesh (1.0mm)",
+    classes: [
+      { name: "Liver", color: "#c084fc", vol: "1,428 cm³", status: "Normal density" },
+      { name: "Kidneys", color: "#38bdf8", vol: "322 cm³", status: "Bilateral preserved" },
+      { name: "Heart", color: "#f87171", vol: "680 cm³", status: "Normal pericardium" },
+      { name: "Spleen", color: "#fbbf24", vol: "210 cm³", status: "Normal size" },
+      { name: "Aorta", color: "#ef4444", vol: "22.4 mm ⌀", status: "Intact lumen" },
+    ],
+    metadata: {
+      series: "3D RECON VOLUMETRIC",
+      thickness: "1.0 mm",
+      voxels: "0.7 × 0.7 × 1.0 mm",
+      inference: "1.18s",
+      confidence: "99.4%",
+    },
+  },
+  {
+    id: "axial_ct",
+    label: "Axial CT Slice",
+    sub: "Multi-Organ Neural Masking",
+    image: "/imaging/axial_ct_segmentation.jpg",
+    modality: "Contrast CT · Abdomen",
+    window: "Soft Tissue (WW: 350 / WL: 40)",
+    classes: [
+      { name: "Liver", color: "#c084fc", vol: "1,428 cm³", status: "Segmented (Violet)" },
+      { name: "Kidneys", color: "#38bdf8", vol: "164 cm³ / 158 cm³", status: "Pyramids intact" },
+      { name: "Spleen", color: "#fbbf24", vol: "210 cm³", status: "Segmented (Amber)" },
+      { name: "Aorta", color: "#60a5fa", vol: "22 mm", status: "Opacified lumen" },
+    ],
+    metadata: {
+      series: "AXIAL DICOM 512×512",
+      thickness: "2.5 mm",
+      voxels: "120 kV · 250 mAs",
+      inference: "0.85s",
+      confidence: "99.6%",
+    },
+  },
+  {
+    id: "brain_mri",
+    label: "Brain MRI",
+    sub: "Cortical & Lesion Parcellation",
+    image: "/imaging/brain_mri_segmentation.jpg",
+    modality: "MRI T1-CE · Neuro",
+    window: "T1-Weighted Contrast Enhanced",
+    classes: [
+      { name: "Cortex L/R", color: "#38bdf8", vol: "1,180 cm³", status: "Symmetric sulci" },
+      { name: "Cerebellum", color: "#34d399", vol: "142 cm³", status: "Normal folia" },
+      { name: "Lesion ROI", color: "#f43f5e", vol: "18.0 cm³", status: "Demarcated ROI" },
+    ],
+    metadata: {
+      series: "NEURO T1 GADOLINIUM",
+      thickness: "1.2 mm",
+      voxels: "TR: 905ms · TE: 26ms",
+      inference: "1.34s",
+      confidence: "98.8%",
+    },
+  },
+];
+
+const MedicalImagingMock = () => {
+  const [activeTab, setActiveTab] = useState("volume3d");
+  const [activeClass, setActiveClass] = useState<string | null>(null);
+
+  const currentScan = scanModes.find((s) => s.id === activeTab) || scanModes[0];
+  const selectedClassInfo = currentScan.classes.find((c) => c.name === activeClass);
+
+  return (
+    <div className="mt-5 space-y-3.5">
+      {/* Top Clinical Switcher & Powered By Badge */}
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div className="flex items-center gap-1 rounded-xl border border-slate-200 bg-slate-100/90 p-1">
+          {scanModes.map((mode) => (
+            <button
+              key={mode.id}
+              onClick={() => {
+                setActiveTab(mode.id);
+                setActiveClass(null);
+              }}
+              className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-all ${
+                activeTab === mode.id
+                  ? "bg-white text-slate-900 shadow-sm"
+                  : "text-slate-500 hover:text-slate-900"
+              }`}
+            >
+              {mode.label}
+            </button>
+          ))}
+        </div>
+
+        <div className="flex items-center gap-2 rounded-full border border-cyan-200 bg-cyan-50 px-3 py-1 text-[11px] font-medium text-cyan-900 shadow-xs">
+          <span className="relative flex h-2 w-2">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-cyan-400 opacity-75" />
+            <span className="relative inline-flex h-2 w-2 rounded-full bg-cyan-500" />
+          </span>
+          <Cpu className="h-3.5 w-3.5 text-cyan-600" />
+          <span className="font-semibold">NVIDIA VISTA-3D™ Engine</span>
+        </div>
+      </div>
+
+      {/* PACS Diagnostic Viewport with Real Clinical Scan Image */}
+      <div className="group relative overflow-hidden rounded-2xl border border-slate-900/60 bg-[#070b14] shadow-2xl">
+        {/* Real Clinical Image Display */}
+        <div className="relative aspect-[16/9] w-full overflow-hidden bg-black">
+          <AnimatePresence mode="wait">
+            <motion.img
+              key={currentScan.id}
+              src={currentScan.image}
+              alt={currentScan.label}
+              initial={{ opacity: 0, scale: 1.02 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.35, ease: "easeOut" }}
+              className="h-full w-full object-contain"
+            />
+          </AnimatePresence>
+
+          {/* Sweeping Laser Scanner Beam */}
+          <motion.div
+            className="pointer-events-none absolute inset-x-0 h-0.5 bg-gradient-to-r from-transparent via-cyan-400 to-transparent shadow-[0_0_16px_#06b6d4]"
+            animate={{ top: ["4%", "96%", "4%"] }}
+            transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
+          />
+
+          {/* Real PACS HUD Overlays */}
+          {/* Top-Left: Modality & Windowing */}
+          <div className="pointer-events-none absolute left-3 top-3 rounded-lg bg-black/60 px-2.5 py-1.5 backdrop-blur-md border border-white/10 text-[11px] font-mono text-white">
+            <div className="flex items-center gap-1.5 text-cyan-400 font-semibold">
+              <Scan className="h-3.5 w-3.5" />
+              <span>{currentScan.modality}</span>
+            </div>
+            <div className="text-[10px] text-slate-300">{currentScan.window}</div>
+          </div>
+
+          {/* Top-Right: AI Confidence & Inference Telemetry */}
+          <div className="pointer-events-none absolute right-3 top-3 rounded-lg bg-black/60 px-2.5 py-1.5 backdrop-blur-md border border-white/10 text-right text-[11px] font-mono text-white">
+            <div className="flex items-center justify-end gap-1.5 text-emerald-400 font-semibold">
+              <Sparkles className="h-3 w-3" />
+              <span>AI Accuracy: {currentScan.metadata.confidence}</span>
+            </div>
+            <div className="text-[10px] text-slate-300">Inference: {currentScan.metadata.inference}</div>
+          </div>
+
+          {/* Bottom-Left: Technical CT Parameters */}
+          <div className="pointer-events-none absolute bottom-3 left-3 hidden sm:block rounded-lg bg-black/60 px-2.5 py-1.5 backdrop-blur-md border border-white/10 text-[10px] font-mono text-slate-300">
+            <div>Series: {currentScan.metadata.series}</div>
+            <div>Slice: {currentScan.metadata.thickness} · {currentScan.metadata.voxels}</div>
+          </div>
+
+          {/* Interactive Inspection Tooltip Banner when an organ is probed */}
+          {selectedClassInfo && (
+            <motion.div
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="absolute bottom-3 right-3 rounded-xl bg-slate-950/90 px-3.5 py-2 backdrop-blur-md border border-cyan-500/50 text-white shadow-xl max-w-xs"
+            >
+              <div className="flex items-center gap-2 text-xs font-semibold">
+                <span className="h-2 w-2 rounded-full" style={{ backgroundColor: selectedClassInfo.color }} />
+                <span>{selectedClassInfo.name}</span>
+                <span className="text-cyan-400 font-mono text-[11px]">{selectedClassInfo.vol}</span>
+              </div>
+              <div className="text-[10px] text-slate-400 mt-0.5">{selectedClassInfo.status}</div>
+            </motion.div>
+          )}
+        </div>
+
+        {/* Anatomical Segmentation Classes Bar */}
+        <div className="flex flex-wrap items-center justify-between gap-2 border-t border-slate-800/80 bg-slate-950/95 px-3.5 py-2.5">
+          <div className="flex flex-wrap items-center gap-1.5">
+            <span className="text-[10px] uppercase font-mono tracking-wider text-slate-400 mr-1 hidden sm:inline">
+              Segmented Organs:
+            </span>
+            {currentScan.classes.map((cls) => {
+              const isSelected = activeClass === cls.name;
+              return (
+                <button
+                  key={cls.name}
+                  onClick={() => setActiveClass(isSelected ? null : cls.name)}
+                  className={`inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-medium transition-all ${
+                    isSelected
+                      ? "bg-cyan-950 text-cyan-200 ring-1 ring-cyan-400"
+                      : "bg-slate-900 text-slate-300 hover:bg-slate-800 hover:text-white"
+                  }`}
+                >
+                  <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: cls.color }} />
+                  <span>{cls.name}</span>
+                  <span className="font-mono text-[10px] text-slate-400">({cls.vol})</span>
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="flex items-center gap-1.5 text-xs font-mono text-cyan-400">
+            <Activity className="h-3 w-3" />
+            <span>Multi-Structure 3D Mesh</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Clinical Specifications Footer */}
+      <div className="grid grid-cols-3 gap-2 text-center text-xs">
+        <div className="rounded-xl border border-slate-200/80 bg-slate-50/80 p-2.5">
+          <div className="font-semibold text-slate-900">128+ Anatomical Classes</div>
+          <div className="text-[11px] text-slate-500">Automated multi-organ masks</div>
+        </div>
+        <div className="rounded-xl border border-slate-200/80 bg-slate-50/80 p-2.5">
+          <div className="font-semibold text-slate-900">Sub-Second Inference</div>
+          <div className="text-[11px] text-slate-500">Instant radiologist assist</div>
+        </div>
+        <div className="rounded-xl border border-slate-200/80 bg-slate-50/80 p-2.5">
+          <div className="font-semibold text-slate-900">DICOM & NIfTI Native</div>
+          <div className="text-[11px] text-slate-500">Zero-install cloud PACS</div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+/* -----------------------------------------------------------
+   Card 4 — Care Analytics
 ------------------------------------------------------------ */
 const AnalyticsMock = () => {
   const rows = [
@@ -176,7 +423,7 @@ const AnalyticsMock = () => {
 };
 
 /* -----------------------------------------------------------
-   Card 4 — Care Team Agents
+   Card 5 — Care Team Agents
 ------------------------------------------------------------ */
 const agents = [
   { name: "Naya", role: "Nurse triage agent", color: "from-emerald-400 to-emerald-600", dot: "bg-emerald-500" },
@@ -210,7 +457,7 @@ const AgentsMock = () => (
 );
 
 /* -----------------------------------------------------------
-   Card 5 — Engagement Suite
+   Card 6 — Engagement Suite
 ------------------------------------------------------------ */
 const EngagementSuiteMock = () => {
   const channels = [
@@ -265,7 +512,7 @@ const EngagementSuiteMock = () => {
 };
 
 /* -----------------------------------------------------------
-   Card 6 — Custom Chatbot
+   Card 7 — Custom Chatbot
 ------------------------------------------------------------ */
 const ChatbotMock = () => (
   <div className="mt-4 space-y-2">
@@ -297,7 +544,7 @@ export default function SolutionsBento() {
         <div className="mb-14 text-center">
           <div className="eyebrow mb-4 inline-block">Our solutions</div>
           <h2 className="mx-auto max-w-3xl font-display text-4xl md:text-6xl font-semibold leading-[1.02] tracking-[-0.03em] text-slate-900">
-            AI care agents that <span className="text-slate-400">help clinics run faster and heal deeper.</span>
+            AI care agents & medical intelligence that <span className="text-slate-400">help clinics run faster and heal deeper.</span>
           </h2>
         </div>
 
@@ -315,40 +562,42 @@ export default function SolutionsBento() {
             </div>
           </Card>
 
-          {/* Row 2 */}
-          <Card delay={0.1}>
+          {/* Row 2: Featured AI Medical Imaging (2 cols) + Care Analytics (1 col) */}
+          <Card delay={0.1} className="md:col-span-2">
+            <div className="flex items-center justify-between">
+              <TitleBlock
+                title="AI Medical Imaging."
+                desc="Instant 3D anatomical segmentation and multi-modal DICOM/CT analysis with neural precision."
+              />
+            </div>
+            <MedicalImagingMock />
+          </Card>
+
+          <Card delay={0.15}>
             <AnalyticsMock />
             <div className="mt-4">
               <TitleBlock title="Care Analytics." desc="Turn clinic data into clear, actionable insights you can act on today." />
             </div>
           </Card>
 
-          <Card delay={0.15}>
-            <TitleBlock title="Care Team Agents." desc="A pod of specialized AI teammates that think and act intelligently for your practice." />
-            <AgentsMock />
-          </Card>
-
+          {/* Row 3: Patient Engagement (1 col) + Care Team Agents (1 col) + Care Chatbot Copilot (1 col) */}
           <Card delay={0.2}>
-            <TitleBlock title="Patient Engagement." desc="Run reminders, follow-ups, and campaigns across WhatsApp, SMS and voice — automatically." />
+            <TitleBlock title="Patient Engagement." desc="Run reminders and follow-ups across WhatsApp, SMS and voice." />
             <EngagementSuiteMock />
           </Card>
 
-          {/* Row 3 */}
-          <Card delay={0.25} className="md:col-span-3">
-            <div className="grid gap-6 md:grid-cols-2 md:items-center">
-              <div>
-                <TitleBlock title="Custom Care Chatbots." desc="Give every patient a 24/7 medically-grounded copilot for symptoms, meds, and records." />
-                <div className="mt-5 flex flex-wrap gap-2">
-                  {["Symptoms", "Medication", "Appointments", "Records", "Billing", "Escalation"].map((t) => (
-                    <span key={t} className="rounded-full border border-slate-200 bg-white px-2.5 py-1 text-[11px] font-medium text-slate-600 shadow-sm">{t}</span>
-                  ))}
-                </div>
-              </div>
-              <ChatbotMock />
-            </div>
+          <Card delay={0.25}>
+            <TitleBlock title="Care Team Agents." desc="A pod of specialized AI teammates for your clinical practice." />
+            <AgentsMock />
+          </Card>
+
+          <Card delay={0.3}>
+            <TitleBlock title="Care Chatbots." desc="24/7 medically-grounded copilot for symptoms, meds, and records." />
+            <ChatbotMock />
           </Card>
         </div>
       </div>
     </section>
   );
 }
+
