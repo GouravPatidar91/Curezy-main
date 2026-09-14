@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import ContactModal from "@/components/landing/ContactModal";
 
 export default function CosmicFrame({ children }: { children: ReactNode }) {
   return (
@@ -18,7 +19,10 @@ export default function CosmicFrame({ children }: { children: ReactNode }) {
           style={{ background: "radial-gradient(closest-side, rgba(14,165,233,0.12), transparent 70%)" }}
         />
 
-        <div className="relative">{children}</div>
+        <div className="relative">
+          {children}
+          <ContactModal />
+        </div>
       </div>
     </div>
   );

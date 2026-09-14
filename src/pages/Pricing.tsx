@@ -4,21 +4,9 @@ import { Link } from "react-router-dom";
 import {
   Check,
   Minus,
-  Sparkles,
   PhoneCall,
-  ArrowRight,
   ChevronLeft,
   ChevronRight,
-  User,
-  Mail,
-  Phone,
-  Building2,
-  HelpCircle,
-  MessageSquare,
-  Send,
-  X,
-  CheckCircle2,
-  Shield,
 } from "lucide-react";
 import CosmicFrame from "@/components/landing/CosmicFrame";
 import LandingNav from "@/components/landing/LandingNav";
@@ -30,20 +18,12 @@ import {
   type CarouselApi,
 } from "@/components/ui/carousel";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
-import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
+import { openContactModal } from "@/components/landing/ContactModal";
 
 type Market = "IN" | "US";
 
@@ -338,21 +318,6 @@ export default function Pricing() {
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(false);
 
-  // Plan Purchase Modal State
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
-
-  // Modal Form Fields
-  const [formName, setFormName] = useState("");
-  const [formEmail, setFormEmail] = useState("");
-  const [formPhone, setFormPhone] = useState("");
-  const [formOrg, setFormOrg] = useState("");
-  const [formPlanName, setFormPlanName] = useState("");
-  const [formDoctors, setFormDoctors] = useState("");
-  const [formMessage, setFormMessage] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
-
   // Automatic Geolocation Detection (No manual toggle)
   useEffect(() => {
     try {
@@ -430,105 +395,13 @@ export default function Pricing() {
       : `$${effective}`;
   };
 
-  // Open the interactive purchase/inquiry modal with pre-filled plan details
+  // Open the global minimal contact modal with pre-filled plan details
   const handleOpenPlanModal = (plan: Plan) => {
-    setSelectedPlan(plan);
-    setFormPlanName(`${plan.name} Plan`);
-    setFormDoctors(plan.providers);
-    setFormMessage(plan.defaultPrompt);
-    setIsSubmitted(false);
-    setIsModalOpen(true);
-  };
-
-  const handleFormSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!formName.trim()) {
-      toast.error("Please enter your name");
-      return;
-    }
-    if (!formEmail.trim() || !formEmail.includes("@")) {
-      toast.error("Please enter a valid email address");
-      return;
-    }
-    if (!formPhone.trim() || formPhone.replace(/\D/g, "").length < 8) {
-      toast.error("Please enter a valid phone number");
-      return;
-    }
-
-    setIsSubmitting(true);
-
-    try {
-      // 1. Insert into Supabase database
-      const { error: dbError } = await supabase
-        .from("contact_submissions")
-        .insert([
-          {
-            name: formName.trim(),
-            email: formEmail.trim().toLowerCase(),
-            phone: formPhone.trim(),
-            organization: formOrg.trim() || null,
-            role: formPlanName,
-            service_interest: `${formPlanName} (${market} - ${
-              isYearly ? "Yearly (15% off)" : "Monthly"
-            })`,
-            message: `${formMessage.trim()} [Doctors/Scale: ${formDoctors}]`,
-          },
-        ]);
-
-      if (dbError) {
-        console.warn("Supabase insert warning:", dbError);
-      }
-
-      // 2. Dispatch email notification to contact@curezy.in
-      try {
-        await fetch("https://formsubmit.co/ajax/contact@curezy.in", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-          body: JSON.stringify({
-            _subject: `New Plan Order/Inquiry: ${formName} - ${formPlanName}`,
-            _template: "table",
-            "Plan Selected": formPlanName,
-            "Billing Cycle": isYearly ? "Yearly (15% off)" : "Monthly",
-            "Market / Region":
-              market === "IN"
-                ? "India (₹ INR)"
-                : "United States / Global ($ USD)",
-            "Price Display": selectedPlan
-              ? `${getPriceDisplay(selectedPlan)}/mo`
-              : "N/A",
-            "Doctors / Scale": formDoctors,
-            "Customer Name": formName.trim(),
-            "Email Address": formEmail.trim(),
-            "Phone Number": formPhone.trim(),
-            "Clinic / Organization": formOrg.trim() || "Not specified",
-            "Requirements / Notes": formMessage.trim(),
-            Timestamp:
-              new Date().toLocaleString("en-IN", {
-                timeZone: "Asia/Kolkata",
-              }) + " IST",
-          }),
-        });
-      } catch (emailErr) {
-        console.warn("Email alert error:", emailErr);
-      }
-
-      setIsSubmitted(true);
-      toast.success(
-        "Thank you! Your request has been received. Our team will contact you shortly."
-      );
-    } catch (err: any) {
-      console.error("Submission failed:", err);
-      toast.error(
-        err?.message ||
-          "Failed to submit. Please try again or email contact@curezy.in directly."
-      );
-    } finally {
-      setIsSubmitting(false);
-    }
+    openContactModal({
+      planName: `${plan.name} Plan`,
+      doctors: plan.providers,
+      message: plan.defaultPrompt,
+    });
   };
 
   return (
@@ -610,7 +483,7 @@ export default function Pricing() {
                 onClick={scrollPrev}
                 disabled={!canScrollPrev}
                 aria-label="Previous plan"
-                className="w-9 h-9 rounded-full bg-white border border-slate-200 shadow-sm flex items-center justify-center text-slate-700 hover:text-slate-900 hover:border-cyan-500 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                className="w-9 h-9 rounded-full bg-white border border-slate-200 shadow-sm flex items-center justify-center text-slate-700 hover:text-slate-900 hover:border-cyan-500 disabled:opacity-30 disabled:cursor-not-allowed transition-all cursor-pointer"
               >
                 <ChevronLeft className="w-4 h-4" />
               </button>
@@ -619,7 +492,7 @@ export default function Pricing() {
                 onClick={scrollNext}
                 disabled={!canScrollNext}
                 aria-label="Next plan"
-                className="w-9 h-9 rounded-full bg-white border border-slate-200 shadow-sm flex items-center justify-center text-slate-700 hover:text-slate-900 hover:border-cyan-500 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                className="w-9 h-9 rounded-full bg-white border border-slate-200 shadow-sm flex items-center justify-center text-slate-700 hover:text-slate-900 hover:border-cyan-500 disabled:opacity-30 disabled:cursor-not-allowed transition-all cursor-pointer"
               >
                 <ChevronRight className="w-4 h-4" />
               </button>
@@ -752,7 +625,7 @@ export default function Pricing() {
                 type="button"
                 aria-label={`Go to slide ${idx + 1}`}
                 onClick={() => scrollTo(idx)}
-                className={`h-2 rounded-full transition-all ${
+                className={`h-2 rounded-full transition-all cursor-pointer ${
                   currentSlide === idx
                     ? "w-7 bg-cyan-600 shadow-sm shadow-cyan-600/50"
                     : "w-2 bg-slate-300 hover:bg-slate-400"
@@ -877,7 +750,7 @@ export default function Pricing() {
                   value={`faq-${i}`}
                   className="border-b border-slate-100 last:border-0"
                 >
-                  <AccordionTrigger className="text-left font-display font-semibold text-sm sm:text-base py-4 text-slate-900 hover:text-cyan-700 hover:no-underline">
+                  <AccordionTrigger className="text-left font-display font-semibold text-sm sm:text-base py-4 text-slate-900 hover:text-cyan-700 hover:no-underline cursor-pointer">
                     {f.q}
                   </AccordionTrigger>
                   <AccordionContent className="text-xs sm:text-sm text-slate-600 leading-relaxed pb-4">
@@ -910,191 +783,28 @@ export default function Pricing() {
               <div className="pt-3 flex flex-wrap items-center justify-center gap-3">
                 <button
                   type="button"
-                  onClick={() => handleOpenPlanModal(plans[1])}
+                  onClick={() =>
+                    openContactModal({
+                      planName: "Starter Plan",
+                      doctors: "1 doctor",
+                    })
+                  }
                   className="btn-white-pill !px-6 !py-3 !text-sm !font-semibold shadow-md shadow-cyan-500/25 cursor-pointer"
                 >
                   Get Started With Starter
                 </button>
-                <Link
-                  to="/contact-us"
-                  className="border border-slate-300 bg-white text-slate-800 hover:bg-slate-50 hover:border-cyan-500 font-semibold rounded-full px-6 py-3 text-sm shadow-sm transition-all"
+                <button
+                  type="button"
+                  onClick={() => openContactModal()}
+                  className="border border-slate-300 bg-white text-slate-800 hover:bg-slate-50 hover:border-cyan-500 font-semibold rounded-full px-6 py-3 text-sm shadow-sm transition-all cursor-pointer"
                 >
                   Contact Us Directly
-                </Link>
+                </button>
               </div>
             </div>
           </div>
         </div>
       </main>
-
-      {/* PLAN PURCHASE / SETUP CONTACT FORM MODAL */}
-      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="max-w-lg bg-white border border-slate-200 text-slate-900 shadow-2xl rounded-3xl p-6 sm:p-8 max-h-[90vh] overflow-y-auto">
-          <DialogHeader className="space-y-2">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-50 text-cyan-700 text-xs font-bold w-fit border border-cyan-200">
-              <Sparkles className="w-3.5 h-3.5 text-cyan-600" />
-              <span>
-                {selectedPlan?.id === "free" ? "Free Tier Setup" : "Plan Onboarding"}
-              </span>
-            </div>
-            <DialogTitle className="text-2xl font-bold font-display text-slate-900">
-              {selectedPlan ? `Get Started with ${selectedPlan.name}` : "Plan Onboarding"}
-            </DialogTitle>
-            <DialogDescription className="text-slate-500 text-xs sm:text-sm">
-              Review pre-filled details for this plan, edit anything as needed,
-              and our team will reach out to activate your line.
-            </DialogDescription>
-          </DialogHeader>
-
-          {isSubmitted ? (
-            <div className="py-8 text-center space-y-4">
-              <div className="w-14 h-14 rounded-full bg-cyan-50 text-cyan-600 flex items-center justify-center mx-auto border border-cyan-200">
-                <CheckCircle2 className="w-8 h-8" />
-              </div>
-              <h4 className="font-display text-xl font-bold text-slate-900">
-                Request Sent Successfully!
-              </h4>
-              <p className="text-xs sm:text-sm text-slate-600 max-w-sm mx-auto leading-relaxed">
-                We've received your request for the{" "}
-                <strong className="text-cyan-700 font-semibold">{formPlanName}</strong>.
-                Our team will reach out to you within a few hours to complete your clinic
-                setup.
-              </p>
-              <button
-                type="button"
-                onClick={() => setIsModalOpen(false)}
-                className="btn-white-pill !px-6 !py-2.5 !text-xs mt-4 !font-semibold"
-              >
-                Close Window
-              </button>
-            </div>
-          ) : (
-            <form onSubmit={handleFormSubmit} className="space-y-4 mt-2">
-              {/* Pre-filled Plan & Doctors row (User can edit) */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 rounded-2xl bg-slate-50 border border-slate-200">
-                <div>
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">
-                    Selected Plan
-                  </label>
-                  <input
-                    type="text"
-                    value={formPlanName}
-                    onChange={(e) => setFormPlanName(e.target.value)}
-                    required
-                    className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-900 font-medium focus:outline-none focus:border-cyan-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">
-                    Doctors / Scale
-                  </label>
-                  <input
-                    type="text"
-                    value={formDoctors}
-                    onChange={(e) => setFormDoctors(e.target.value)}
-                    required
-                    className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-900 font-medium focus:outline-none focus:border-cyan-500"
-                  />
-                </div>
-              </div>
-
-              {/* User Personal Details */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1.5 flex items-center gap-1.5">
-                    <User className="w-3.5 h-3.5 text-cyan-600" /> Full Name *
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Dr. Rajesh / Sarah Jenkins"
-                    value={formName}
-                    onChange={(e) => setFormName(e.target.value)}
-                    required
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-cyan-500 focus:bg-white transition-colors"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1.5 flex items-center gap-1.5">
-                    <Phone className="w-3.5 h-3.5 text-cyan-600" /> Phone / WhatsApp *
-                  </label>
-                  <input
-                    type="tel"
-                    placeholder={market === "IN" ? "+91 98765 43210" : "+1 (555) 000-0000"}
-                    value={formPhone}
-                    onChange={(e) => setFormPhone(e.target.value)}
-                    required
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-cyan-500 focus:bg-white transition-colors"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1.5 flex items-center gap-1.5">
-                    <Mail className="w-3.5 h-3.5 text-cyan-600" /> Work Email *
-                  </label>
-                  <input
-                    type="email"
-                    placeholder="doctor@clinic.com"
-                    value={formEmail}
-                    onChange={(e) => setFormEmail(e.target.value)}
-                    required
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-cyan-500 focus:bg-white transition-colors"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1.5 flex items-center gap-1.5">
-                    <Building2 className="w-3.5 h-3.5 text-cyan-600" /> Clinic / Practice Name
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="City Care Polyclinic"
-                    value={formOrg}
-                    onChange={(e) => setFormOrg(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-cyan-500 focus:bg-white transition-colors"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1.5 flex items-center gap-1.5">
-                  <MessageSquare className="w-3.5 h-3.5 text-cyan-600" /> Pre-filled Requirements & Note (Editable)
-                </label>
-                <textarea
-                  rows={3}
-                  value={formMessage}
-                  onChange={(e) => setFormMessage(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-cyan-500 focus:bg-white transition-colors resize-none leading-relaxed"
-                />
-              </div>
-
-              <div className="pt-2 flex items-center justify-between gap-3">
-                <button
-                  type="button"
-                  onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2.5 rounded-full text-xs font-semibold text-slate-600 hover:text-slate-900 transition-colors"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="btn-white-pill !px-6 !py-2.5 !text-xs font-semibold shadow-md shadow-cyan-500/25 flex items-center gap-2 cursor-pointer disabled:opacity-50"
-                >
-                  {isSubmitting ? (
-                    <>Submitting...</>
-                  ) : (
-                    <>
-                      <span>Submit Request</span>
-                      <Send className="w-3.5 h-3.5" />
-                    </>
-                  )}
-                </button>
-              </div>
-            </form>
-          )}
-        </DialogContent>
-      </Dialog>
 
       <LandingFooter />
     </CosmicFrame>

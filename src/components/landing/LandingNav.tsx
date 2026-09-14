@@ -1,13 +1,13 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { openContactModal } from "@/components/landing/ContactModal";
 
 const links = [
   { label: "How it works", href: "/#how" },
   { label: "Solutions", href: "/#solutions" },
-  { label: "Pricing", href: "/#pricing" },
+  { label: "Pricing", href: "/pricing" },
   { label: "Case study", href: "/#case" },
   { label: "FAQ", href: "/#faq" },
-  { label: "Contact", href: "/contact-us" },
 ];
 
 export default function LandingNav() {
@@ -34,17 +34,34 @@ export default function LandingNav() {
                 {l.label}
               </a>
             ))}
+            <button
+              type="button"
+              onClick={() => openContactModal()}
+              className="px-3 py-1.5 text-[13px] font-medium text-white/60 hover:text-white rounded-full transition-colors whitespace-nowrap cursor-pointer"
+            >
+              Contact
+            </button>
           </nav>
           <div className="flex items-center gap-2 justify-self-end">
-            <Link
-              to="/contact-us"
-              className="text-[13px] font-medium text-white/80 hover:text-white px-3.5 py-1.5 rounded-full hover:bg-white/10 transition-colors whitespace-nowrap"
+            <button
+              type="button"
+              onClick={() => openContactModal()}
+              className="text-[13px] font-medium text-white/80 hover:text-white px-3.5 py-1.5 rounded-full hover:bg-white/10 transition-colors whitespace-nowrap cursor-pointer"
             >
               Contact us
-            </Link>
-            <a href="#contact" className="btn-white-pill text-[13px]">
+            </button>
+            <button
+              type="button"
+              onClick={() =>
+                openContactModal({
+                  message:
+                    "Hi Curezy team, I would like to schedule a 15-minute live demo of the AI Receptionist for my clinic.",
+                })
+              }
+              className="btn-white-pill text-[13px] cursor-pointer"
+            >
               Book a demo
-            </a>
+            </button>
           </div>
         </div>
       </motion.header>
