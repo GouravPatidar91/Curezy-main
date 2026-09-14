@@ -555,13 +555,13 @@ export default function Pricing() {
           </p>
 
           {/* Clean Annual Discount Toggle */}
-          <div className="mt-6 inline-flex items-center gap-1 p-1 rounded-full bg-slate-100 border border-slate-200 shadow-inner">
+          <div className="mt-6 inline-flex items-center gap-1.5 p-1 rounded-full bg-slate-100 border border-slate-200 shadow-inner">
             <button
               type="button"
               onClick={() => setIsYearly(false)}
               className={`px-5 py-2 rounded-full text-xs font-bold transition-all ${
                 !isYearly
-                  ? "bg-slate-900 text-pure-white shadow-sm"
+                  ? "bg-gradient-to-r from-cyan-500 to-sky-500 text-pure-white shadow-md shadow-cyan-500/25"
                   : "text-slate-600 hover:text-slate-900"
               }`}
             >
@@ -572,7 +572,7 @@ export default function Pricing() {
               onClick={() => setIsYearly(true)}
               className={`flex items-center gap-1.5 px-5 py-2 rounded-full text-xs font-bold transition-all ${
                 isYearly
-                  ? "bg-slate-900 text-pure-white shadow-sm"
+                  ? "bg-gradient-to-r from-cyan-500 to-sky-500 text-pure-white shadow-md shadow-cyan-500/25"
                   : "text-slate-600 hover:text-slate-900"
               }`}
             >
@@ -580,7 +580,7 @@ export default function Pricing() {
               <span
                 className={`text-[10px] uppercase font-extrabold px-2 py-0.5 rounded-full border transition-colors ${
                   isYearly
-                    ? "bg-cyan-500/20 text-cyan-300 border-cyan-400/40"
+                    ? "bg-white/20 text-pure-white border-white/30"
                     : "bg-cyan-50 text-cyan-700 border-cyan-200"
                 }`}
               >
