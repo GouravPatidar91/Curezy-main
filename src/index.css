@@ -222,9 +222,13 @@
 
   /* Scoped light theme overrides for landing (flip hardcoded dark classes) */
   .cosmic-root .text-white { color: #0f172a !important; }
+  .cosmic-root .text-white\/95 { color: rgba(15,23,42,0.95) !important; }
   .cosmic-root .text-white\/90 { color: rgba(15,23,42,0.9) !important; }
+  .cosmic-root .text-white\/85 { color: rgba(15,23,42,0.85) !important; }
   .cosmic-root .text-white\/80 { color: rgba(15,23,42,0.8) !important; }
+  .cosmic-root .text-white\/75 { color: rgba(15,23,42,0.75) !important; }
   .cosmic-root .text-white\/70 { color: rgba(15,23,42,0.75) !important; }
+  .cosmic-root .text-white\/65 { color: rgba(15,23,42,0.65) !important; }
   .cosmic-root .text-white\/60 { color: rgba(15,23,42,0.65) !important; }
   .cosmic-root .text-white\/50 { color: rgba(15,23,42,0.55) !important; }
   .cosmic-root .text-white\/40 { color: rgba(15,23,42,0.45) !important; }

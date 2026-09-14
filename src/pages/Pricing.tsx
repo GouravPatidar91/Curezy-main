@@ -212,7 +212,6 @@ const plans: Plan[] = [
   },
 ];
 
-// Simple, clean feature comparison table rows
 const simpleComparisonRows = [
   {
     feature: "Doctors / Providers",
@@ -354,7 +353,7 @@ export default function Pricing() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  // Auto-detect country on mount
+  // Automatic Geolocation Detection (No manual toggle)
   useEffect(() => {
     try {
       const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || "";
@@ -375,6 +374,16 @@ export default function Pricing() {
         setMarket("US");
         return;
       }
+      const languages = navigator.languages || [navigator.language || ""];
+      if (languages.some((l) => l.includes("-US"))) {
+        setMarket("US");
+        return;
+      }
+      if (languages.some((l) => l.includes("-IN") || l.startsWith("hi"))) {
+        setMarket("IN");
+        return;
+      }
+
       fetch("https://api.country.is/")
         .then((res) => res.json())
         .then((data) => {
@@ -528,79 +537,50 @@ export default function Pricing() {
 
       <main className="pt-28 md:pt-36 pb-20">
         {/* Header Hero */}
-        <div className="container px-4 max-w-4xl mx-auto text-center mb-12">
-          <div className="eyebrow mb-4">Transparent Pricing</div>
+        <div className="container px-4 max-w-4xl mx-auto text-center mb-10">
+          <div className="eyebrow mb-3">Transparent Pricing</div>
 
           <motion.h1
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            className="font-display text-4xl sm:text-5xl md:text-6xl font-semibold tracking-[-0.03em] text-white leading-[1.08]"
+            className="font-display text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-[-0.03em] text-slate-900 leading-[1.08]"
           >
             Predictable plans for{" "}
-            <span className="text-white/40">modern healthcare.</span>
+            <span className="text-slate-400">modern healthcare.</span>
           </motion.h1>
 
-          <p className="mt-4 text-base sm:text-lg text-white/60 max-w-xl mx-auto leading-relaxed">
+          <p className="mt-3 text-base sm:text-lg text-slate-600 max-w-xl mx-auto leading-relaxed">
             Choose the right tier for your clinic or hospital practice. Start
             completely free with 30 AI minutes each month.
           </p>
 
-          {/* Clean Controls: Market Toggle & Annual Toggle */}
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-            {/* Currency Selector */}
-            <div className="inline-flex items-center gap-1.5 p-1 rounded-full glass-dark-card border border-white/10 shadow-sm">
-              <button
-                type="button"
-                onClick={() => setMarket("IN")}
-                className={`flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-semibold transition-all ${
-                  market === "IN"
-                    ? "btn-white-pill !py-1.5 !px-3 shadow-sm"
-                    : "text-white/60 hover:text-white"
-                }`}
-              >
-                <span>🇮🇳</span> ₹ INR
-              </button>
-              <button
-                type="button"
-                onClick={() => setMarket("US")}
-                className={`flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-semibold transition-all ${
-                  market === "US"
-                    ? "btn-white-pill !py-1.5 !px-3 shadow-sm"
-                    : "text-white/60 hover:text-white"
-                }`}
-              >
-                <span>🇺🇸</span> $ USD
-              </button>
-            </div>
-
-            {/* Monthly / Annual Billing Toggle */}
-            <div className="inline-flex items-center gap-2 p-1 rounded-full glass-dark-card border border-white/10">
-              <button
-                type="button"
-                onClick={() => setIsYearly(false)}
-                className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
-                  !isYearly
-                    ? "btn-white-pill !py-1.5 !px-3"
-                    : "text-white/60 hover:text-white"
-                }`}
-              >
-                Monthly
-              </button>
-              <button
-                type="button"
-                onClick={() => setIsYearly(true)}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
-                  isYearly
-                    ? "btn-white-pill !py-1.5 !px-3"
-                    : "text-white/60 hover:text-white"
-                }`}
-              >
-                Yearly
-                <span className="text-[10px] uppercase font-bold text-cyan-500 bg-cyan-500/10 px-1.5 py-0.5 rounded-full border border-cyan-500/20">
-                  Save 15%
-                </span>
-              </button>
-            </div>
+          {/* Clean Annual Discount Toggle (INR/USD toggle removed as requested, handled automatically) */}
+          <div className="mt-6 inline-flex items-center gap-1.5 p-1 rounded-full bg-white/90 border border-slate-200/90 shadow-sm">
+            <button
+              type="button"
+              onClick={() => setIsYearly(false)}
+              className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all ${
+                !isYearly
+                  ? "bg-slate-900 text-white shadow-sm"
+                  : "text-slate-600 hover:text-slate-900"
+              }`}
+            >
+              Monthly
+            </button>
+            <button
+              type="button"
+              onClick={() => setIsYearly(true)}
+              className={`flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-semibold transition-all ${
+                isYearly
+                  ? "bg-slate-900 text-white shadow-sm"
+                  : "text-slate-600 hover:text-slate-900"
+              }`}
+            >
+              Yearly
+              <span className="text-[10px] uppercase font-bold text-cyan-600 bg-cyan-50 px-1.5 py-0.5 rounded-full border border-cyan-200">
+                Save 15%
+              </span>
+            </button>
           </div>
         </div>
 
@@ -609,10 +589,10 @@ export default function Pricing() {
           {/* Carousel Header & Navigation Controls */}
           <div className="flex items-center justify-between mb-6 px-2">
             <div className="flex items-center gap-2">
-              <span className="text-xs uppercase tracking-widest font-semibold text-white/50">
+              <span className="text-xs uppercase tracking-wider font-bold text-slate-500">
                 Explore Plans
               </span>
-              <span className="text-xs text-cyan-600 font-medium bg-cyan-500/10 px-2 py-0.5 rounded-full border border-cyan-500/20">
+              <span className="text-xs text-cyan-700 font-semibold bg-cyan-50 px-2.5 py-0.5 rounded-full border border-cyan-200">
                 {plans.length} Tiers
               </span>
             </div>
@@ -624,7 +604,7 @@ export default function Pricing() {
                 onClick={scrollPrev}
                 disabled={!canScrollPrev}
                 aria-label="Previous plan"
-                className="w-9 h-9 rounded-full glass-dark-card border border-white/10 flex items-center justify-center text-white/70 hover:text-white hover:border-cyan-400/50 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                className="w-9 h-9 rounded-full bg-white border border-slate-200 shadow-sm flex items-center justify-center text-slate-700 hover:text-slate-900 hover:border-cyan-500 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
               >
                 <ChevronLeft className="w-4 h-4" />
               </button>
@@ -633,7 +613,7 @@ export default function Pricing() {
                 onClick={scrollNext}
                 disabled={!canScrollNext}
                 aria-label="Next plan"
-                className="w-9 h-9 rounded-full glass-dark-card border border-white/10 flex items-center justify-center text-white/70 hover:text-white hover:border-cyan-400/50 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                className="w-9 h-9 rounded-full bg-white border border-slate-200 shadow-sm flex items-center justify-center text-slate-700 hover:text-slate-900 hover:border-cyan-500 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
               >
                 <ChevronRight className="w-4 h-4" />
               </button>
@@ -658,35 +638,35 @@ export default function Pricing() {
                     className="pl-4 basis-[92%] sm:basis-[50%] md:basis-[33.333%] lg:basis-[33.333%] xl:basis-[33.333%]"
                   >
                     <div
-                      className={`h-full flex flex-col justify-between rounded-[28px] p-6 sm:p-7 relative transition-all overflow-hidden ${
+                      className={`h-full flex flex-col justify-between rounded-[28px] p-6 sm:p-7 relative transition-all overflow-hidden bg-white ${
                         isPopular
-                          ? "glass-dark-card border-2 border-cyan-400 shadow-[0_20px_50px_-20px_rgba(6,182,212,0.4)]"
-                          : "glass-dark-card border border-white/10 hover:border-white/20 shadow-sm"
+                          ? "border-2 border-cyan-500 shadow-[0_20px_50px_-15px_rgba(6,182,212,0.35)] ring-4 ring-cyan-500/10"
+                          : "border border-slate-200/90 hover:border-slate-300 shadow-sm"
                       }`}
                     >
-                      {/* Top Popular Glow */}
+                      {/* Top Popular Subtle Glow */}
                       {isPopular && (
                         <div
                           className="pointer-events-none absolute -inset-px rounded-[28px]"
                           style={{
                             background:
-                              "radial-gradient(120% 50% at 50% 0%, rgba(6,182,212,0.18), transparent 70%)",
+                              "radial-gradient(120% 50% at 50% 0%, rgba(6,182,212,0.12), transparent 70%)",
                           }}
                         />
                       )}
 
                       <div className="relative z-10">
                         {/* Plan Header */}
-                        <div className="flex items-center justify-between gap-2 mb-3">
-                          <h3 className="font-display text-2xl font-bold text-white">
+                        <div className="flex items-center justify-between gap-2 mb-2.5">
+                          <h3 className="font-display text-2xl font-bold text-slate-900">
                             {plan.name}
                           </h3>
                           {plan.badge && (
                             <span
-                              className={`text-[11px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-full ${
+                              className={`text-[11px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full ${
                                 isPopular
-                                  ? "bg-gradient-to-r from-cyan-500 to-sky-500 text-white shadow-sm"
-                                  : "bg-white/10 text-white/75 border border-white/10"
+                                  ? "bg-gradient-to-r from-cyan-600 to-sky-600 text-white shadow-sm"
+                                  : "bg-cyan-50 text-cyan-800 border border-cyan-200/80"
                               }`}
                             >
                               {plan.badge}
@@ -694,43 +674,43 @@ export default function Pricing() {
                           )}
                         </div>
 
-                        <p className="text-xs text-white/50 min-h-[32px] leading-relaxed mb-5">
+                        <p className="text-xs text-slate-600 min-h-[32px] leading-relaxed mb-5 font-medium">
                           {plan.target[market]}
                         </p>
 
                         {/* Price Display */}
-                        <div className="mb-5 pb-5 border-b border-white/[0.08]">
+                        <div className="mb-5 pb-5 border-b border-slate-100">
                           <div className="flex items-baseline gap-1">
-                            <span className="font-display text-4xl sm:text-5xl font-bold text-white tracking-tight">
+                            <span className="font-display text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">
                               {getPriceDisplay(plan)}
                             </span>
                             {plan.period && (
-                              <span className="text-xs font-medium text-white/40">
+                              <span className="text-xs font-semibold text-slate-400">
                                 {plan.period}
                               </span>
                             )}
                           </div>
-                          <div className="mt-2 flex items-center gap-2 text-xs text-cyan-600 font-semibold">
-                            <PhoneCall className="w-3.5 h-3.5" />
+                          <div className="mt-2.5 flex items-center gap-2 text-xs text-cyan-700 font-bold">
+                            <PhoneCall className="w-3.5 h-3.5 text-cyan-600" />
                             <span>{plan.voiceMinutes}</span>
-                            <span className="text-white/30">·</span>
-                            <span className="text-white/60 font-normal">
+                            <span className="text-slate-300">·</span>
+                            <span className="text-slate-600 font-medium">
                               {plan.providers}
                             </span>
                           </div>
                         </div>
 
-                        {/* Minimal Features List */}
+                        {/* High-contrast Features List */}
                         <div className="space-y-2.5 mb-6">
-                          <div className="text-[11px] uppercase tracking-wider font-semibold text-white/40">
+                          <div className="text-[11px] uppercase tracking-wider font-bold text-slate-500">
                             Key features:
                           </div>
                           {plan.features.map((feat, fIdx) => (
                             <div
                               key={fIdx}
-                              className="flex items-start gap-2 text-xs text-white/75 leading-snug"
+                              className="flex items-start gap-2.5 text-xs text-slate-700 font-medium leading-relaxed"
                             >
-                              <Check className="w-3.5 h-3.5 text-cyan-500 shrink-0 mt-0.5" />
+                              <Check className="w-4 h-4 text-cyan-600 shrink-0 mt-0.5" />
                               <span>{feat}</span>
                             </div>
                           ))}
@@ -738,14 +718,14 @@ export default function Pricing() {
                       </div>
 
                       {/* Action Button */}
-                      <div className="relative z-10 pt-4 mt-auto border-t border-white/[0.08]">
+                      <div className="relative z-10 pt-4 mt-auto border-t border-slate-100">
                         <button
                           type="button"
                           onClick={() => handleOpenPlanModal(plan)}
-                          className={`w-full justify-center !text-sm !py-3 cursor-pointer ${
+                          className={`w-full justify-center !text-sm !py-3 rounded-full cursor-pointer transition-all ${
                             isPopular
-                              ? "btn-white-pill shadow-md shadow-cyan-500/25"
-                              : "btn-glass-pill hover:!border-cyan-400/60"
+                              ? "btn-white-pill !text-white font-semibold shadow-md shadow-cyan-500/30"
+                              : "border border-slate-300 bg-white text-slate-800 hover:bg-slate-50 hover:border-cyan-500 hover:text-cyan-700 font-semibold shadow-sm"
                           }`}
                         >
                           {plan.ctaText}
@@ -768,8 +748,8 @@ export default function Pricing() {
                 onClick={() => scrollTo(idx)}
                 className={`h-2 rounded-full transition-all ${
                   currentSlide === idx
-                    ? "w-7 bg-cyan-500 shadow-sm shadow-cyan-500/50"
-                    : "w-2 bg-white/20 hover:bg-white/40"
+                    ? "w-7 bg-cyan-600 shadow-sm shadow-cyan-600/50"
+                    : "w-2 bg-slate-300 hover:bg-slate-400"
                 }`}
               />
             ))}
@@ -780,60 +760,60 @@ export default function Pricing() {
         <div className="container px-4 max-w-6xl mx-auto mb-24">
           <div className="text-center max-w-2xl mx-auto mb-10">
             <div className="eyebrow mb-2">Compare Features</div>
-            <h2 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight text-white">
-              Feature <span className="text-white/40">breakdown.</span>
+            <h2 className="font-display text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900">
+              Feature <span className="text-slate-400">breakdown.</span>
             </h2>
-            <p className="mt-2 text-sm text-white/60">
+            <p className="mt-2 text-sm text-slate-600">
               Clean side-by-side comparison across all tiers.
             </p>
           </div>
 
-          <div className="glass-dark-card rounded-[28px] p-4 sm:p-6 overflow-x-auto shadow-sm border border-white/10">
+          <div className="bg-white rounded-[28px] p-4 sm:p-6 overflow-x-auto shadow-sm border border-slate-200/90">
             <table className="w-full text-left text-sm min-w-[700px]">
               <thead>
-                <tr className="border-b border-white/10 text-xs font-semibold uppercase tracking-wider text-white/50">
+                <tr className="border-b border-slate-200 text-xs font-bold uppercase tracking-wider text-slate-500">
                   <th className="py-3 px-3">Plan</th>
-                  <th className="py-3 px-2 text-center">Free</th>
-                  <th className="py-3 px-2 text-center text-cyan-600 font-bold bg-cyan-500/5 rounded-t-lg">
+                  <th className="py-3 px-2 text-center text-slate-700">Free</th>
+                  <th className="py-3 px-2 text-center text-cyan-700 font-bold bg-cyan-50/70 rounded-t-lg">
                     Starter ⭐
                   </th>
-                  <th className="py-3 px-2 text-center">Growth</th>
-                  <th className="py-3 px-2 text-center font-bold text-cyan-600">AI Care</th>
-                  <th className="py-3 px-2 text-center">Pro</th>
-                  <th className="py-3 px-2 text-center">Enterprise</th>
+                  <th className="py-3 px-2 text-center text-slate-700">Growth</th>
+                  <th className="py-3 px-2 text-center font-bold text-cyan-700">AI Care</th>
+                  <th className="py-3 px-2 text-center text-slate-700">Pro</th>
+                  <th className="py-3 px-2 text-center text-slate-700">Enterprise</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/[0.06]">
+              <tbody className="divide-y divide-slate-100">
                 {/* Price Row */}
-                <tr className="font-semibold text-white">
-                  <td className="py-3.5 px-3 text-xs uppercase tracking-wider text-white/50 font-medium">
+                <tr className="font-semibold text-slate-900">
+                  <td className="py-3.5 px-3 text-xs uppercase tracking-wider text-slate-500 font-bold">
                     Price / mo
                   </td>
-                  <td className="py-3.5 px-2 text-center text-xs">
+                  <td className="py-3.5 px-2 text-center text-xs font-bold text-slate-800">
                     {getPriceDisplay(plans[0])}
                   </td>
-                  <td className="py-3.5 px-2 text-center text-xs font-bold text-cyan-600 bg-cyan-500/5">
+                  <td className="py-3.5 px-2 text-center text-xs font-extrabold text-cyan-700 bg-cyan-50/70">
                     {getPriceDisplay(plans[1])}
                   </td>
-                  <td className="py-3.5 px-2 text-center text-xs">
+                  <td className="py-3.5 px-2 text-center text-xs font-bold text-slate-800">
                     {getPriceDisplay(plans[2])}
                   </td>
-                  <td className="py-3.5 px-2 text-center text-xs font-bold text-cyan-600">
+                  <td className="py-3.5 px-2 text-center text-xs font-extrabold text-cyan-700">
                     {getPriceDisplay(plans[3])}
                   </td>
-                  <td className="py-3.5 px-2 text-center text-xs">
+                  <td className="py-3.5 px-2 text-center text-xs font-bold text-slate-800">
                     {getPriceDisplay(plans[4])}
                   </td>
-                  <td className="py-3.5 px-2 text-center text-xs">Custom</td>
+                  <td className="py-3.5 px-2 text-center text-xs font-bold text-slate-800">Custom</td>
                 </tr>
 
                 {/* Feature Rows */}
                 {simpleComparisonRows.map((row, rIdx) => (
                   <tr
                     key={rIdx}
-                    className="hover:bg-white/[0.02] transition-colors"
+                    className="hover:bg-slate-50/80 transition-colors"
                   >
-                    <td className="py-3 px-3 font-medium text-xs sm:text-sm text-white/80">
+                    <td className="py-3 px-3 font-medium text-xs sm:text-sm text-slate-700">
                       {row.feature}
                     </td>
                     {[
@@ -851,15 +831,15 @@ export default function Pricing() {
                           key={key}
                           className={`py-3 px-2 text-center text-xs ${
                             isStarter
-                              ? "bg-cyan-500/5 font-semibold text-cyan-600"
-                              : "text-white/70"
+                              ? "bg-cyan-50/70 font-bold text-cyan-700"
+                              : "text-slate-600 font-medium"
                           }`}
                         >
                           {typeof val === "boolean" ? (
                             val ? (
-                              <Check className="w-4 h-4 text-cyan-500 mx-auto" />
+                              <Check className="w-4 h-4 text-cyan-600 mx-auto" />
                             ) : (
-                              <Minus className="w-3.5 h-3.5 text-white/20 mx-auto" />
+                              <Minus className="w-3.5 h-3.5 text-slate-300 mx-auto" />
                             )
                           ) : (
                             <span>{val}</span>
@@ -878,23 +858,23 @@ export default function Pricing() {
         <div className="container px-4 max-w-3xl mx-auto mb-20">
           <div className="text-center mb-8">
             <div className="eyebrow mb-2">FAQ</div>
-            <h2 className="font-display text-2xl sm:text-3xl font-semibold tracking-tight text-white">
-              Got questions? <span className="text-white/40">We've got answers.</span>
+            <h2 className="font-display text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
+              Got questions? <span className="text-slate-400">We've got answers.</span>
             </h2>
           </div>
 
-          <div className="glass-dark-card rounded-[28px] p-6 sm:p-8 border border-white/10">
+          <div className="bg-white rounded-[28px] p-6 sm:p-8 border border-slate-200/90 shadow-sm">
             <Accordion type="single" collapsible className="w-full">
               {faqs.map((f, i) => (
                 <AccordionItem
                   key={i}
                   value={`faq-${i}`}
-                  className="border-b border-white/[0.08] last:border-0"
+                  className="border-b border-slate-100 last:border-0"
                 >
-                  <AccordionTrigger className="text-left font-display font-semibold text-sm sm:text-base py-4 text-white hover:no-underline">
+                  <AccordionTrigger className="text-left font-display font-semibold text-sm sm:text-base py-4 text-slate-900 hover:text-cyan-700 hover:no-underline">
                     {f.q}
                   </AccordionTrigger>
-                  <AccordionContent className="text-xs sm:text-sm text-white/60 leading-relaxed pb-4">
+                  <AccordionContent className="text-xs sm:text-sm text-slate-600 leading-relaxed pb-4">
                     {f.a}
                   </AccordionContent>
                 </AccordionItem>
@@ -905,19 +885,19 @@ export default function Pricing() {
 
         {/* BOTTOM CALL TO ACTION */}
         <div className="container px-4 max-w-4xl mx-auto text-center">
-          <div className="glass-dark-card rounded-[32px] p-8 sm:p-12 relative overflow-hidden border border-white/10 shadow-lg">
+          <div className="bg-white rounded-[32px] p-8 sm:p-12 relative overflow-hidden border border-slate-200/90 shadow-lg">
             <div
               className="pointer-events-none absolute -inset-px rounded-[32px] opacity-60"
               style={{
                 background:
-                  "radial-gradient(ellipse at top, rgba(6,182,212,0.15) 0%, transparent 60%)",
+                  "radial-gradient(ellipse at top, rgba(6,182,212,0.12) 0%, transparent 60%)",
               }}
             />
             <div className="relative z-10 max-w-xl mx-auto space-y-3">
-              <h3 className="font-display text-2xl sm:text-3xl font-semibold text-white tracking-tight">
+              <h3 className="font-display text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
                 Not sure which plan is right for you?
               </h3>
-              <p className="text-white/60 text-xs sm:text-sm leading-relaxed">
+              <p className="text-slate-600 text-xs sm:text-sm leading-relaxed font-medium">
                 Talk directly with our clinical workflow experts. We'll tailor
                 the setup to your exact patient call volume.
               </p>
@@ -925,13 +905,13 @@ export default function Pricing() {
                 <button
                   type="button"
                   onClick={() => handleOpenPlanModal(plans[1])}
-                  className="btn-white-pill !px-6 !py-3 !text-sm"
+                  className="btn-white-pill !px-6 !py-3 !text-sm !font-semibold shadow-md shadow-cyan-500/25 cursor-pointer"
                 >
                   Get Started With Starter
                 </button>
                 <Link
                   to="/contact-us"
-                  className="btn-glass-pill !px-6 !py-3 !text-sm"
+                  className="border border-slate-300 bg-white text-slate-800 hover:bg-slate-50 hover:border-cyan-500 font-semibold rounded-full px-6 py-3 text-sm shadow-sm transition-all"
                 >
                   Contact Us Directly
                 </Link>
@@ -943,18 +923,18 @@ export default function Pricing() {
 
       {/* PLAN PURCHASE / SETUP CONTACT FORM MODAL */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="max-w-lg bg-[#0b101b] border border-cyan-500/30 text-white shadow-2xl rounded-3xl p-6 sm:p-8 max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-lg bg-white border border-slate-200 text-slate-900 shadow-2xl rounded-3xl p-6 sm:p-8 max-h-[90vh] overflow-y-auto">
           <DialogHeader className="space-y-2">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-400 text-xs font-semibold w-fit border border-cyan-500/20">
-              <Sparkles className="w-3.5 h-3.5" />
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-50 text-cyan-700 text-xs font-bold w-fit border border-cyan-200">
+              <Sparkles className="w-3.5 h-3.5 text-cyan-600" />
               <span>
                 {selectedPlan?.id === "free" ? "Free Tier Setup" : "Plan Onboarding"}
               </span>
             </div>
-            <DialogTitle className="text-2xl font-bold font-display text-white">
+            <DialogTitle className="text-2xl font-bold font-display text-slate-900">
               {selectedPlan ? `Get Started with ${selectedPlan.name}` : "Plan Onboarding"}
             </DialogTitle>
-            <DialogDescription className="text-white/60 text-xs sm:text-sm">
+            <DialogDescription className="text-slate-500 text-xs sm:text-sm">
               Review pre-filled details for this plan, edit anything as needed,
               and our team will reach out to activate your line.
             </DialogDescription>
@@ -962,22 +942,22 @@ export default function Pricing() {
 
           {isSubmitted ? (
             <div className="py-8 text-center space-y-4">
-              <div className="w-14 h-14 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center mx-auto border border-cyan-500/30">
+              <div className="w-14 h-14 rounded-full bg-cyan-50 text-cyan-600 flex items-center justify-center mx-auto border border-cyan-200">
                 <CheckCircle2 className="w-8 h-8" />
               </div>
-              <h4 className="font-display text-xl font-bold text-white">
+              <h4 className="font-display text-xl font-bold text-slate-900">
                 Request Sent Successfully!
               </h4>
-              <p className="text-xs sm:text-sm text-white/70 max-w-sm mx-auto leading-relaxed">
+              <p className="text-xs sm:text-sm text-slate-600 max-w-sm mx-auto leading-relaxed">
                 We've received your request for the{" "}
-                <strong className="text-cyan-400 font-semibold">{formPlanName}</strong>.
+                <strong className="text-cyan-700 font-semibold">{formPlanName}</strong>.
                 Our team will reach out to you within a few hours to complete your clinic
                 setup.
               </p>
               <button
                 type="button"
                 onClick={() => setIsModalOpen(false)}
-                className="btn-white-pill !px-6 !py-2.5 !text-xs mt-4"
+                className="btn-white-pill !px-6 !py-2.5 !text-xs mt-4 !font-semibold"
               >
                 Close Window
               </button>
@@ -985,9 +965,9 @@ export default function Pricing() {
           ) : (
             <form onSubmit={handleFormSubmit} className="space-y-4 mt-2">
               {/* Pre-filled Plan & Doctors row (User can edit) */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 rounded-2xl bg-white/[0.04] border border-white/10">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 rounded-2xl bg-slate-50 border border-slate-200">
                 <div>
-                  <label className="block text-[11px] font-semibold uppercase tracking-wider text-white/50 mb-1">
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">
                     Selected Plan
                   </label>
                   <input
@@ -995,11 +975,11 @@ export default function Pricing() {
                     value={formPlanName}
                     onChange={(e) => setFormPlanName(e.target.value)}
                     required
-                    className="w-full bg-black/40 border border-white/15 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-400"
+                    className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-900 font-medium focus:outline-none focus:border-cyan-500"
                   />
                 </div>
                 <div>
-                  <label className="block text-[11px] font-semibold uppercase tracking-wider text-white/50 mb-1">
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">
                     Doctors / Scale
                   </label>
                   <input
@@ -1007,7 +987,7 @@ export default function Pricing() {
                     value={formDoctors}
                     onChange={(e) => setFormDoctors(e.target.value)}
                     required
-                    className="w-full bg-black/40 border border-white/15 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-400"
+                    className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-900 font-medium focus:outline-none focus:border-cyan-500"
                   />
                 </div>
               </div>
@@ -1015,8 +995,8 @@ export default function Pricing() {
               {/* User Personal Details */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-medium text-white/70 mb-1.5 flex items-center gap-1.5">
-                    <User className="w-3.5 h-3.5 text-cyan-400" /> Full Name *
+                  <label className="block text-xs font-semibold text-slate-700 mb-1.5 flex items-center gap-1.5">
+                    <User className="w-3.5 h-3.5 text-cyan-600" /> Full Name *
                   </label>
                   <input
                     type="text"
@@ -1024,12 +1004,12 @@ export default function Pricing() {
                     value={formName}
                     onChange={(e) => setFormName(e.target.value)}
                     required
-                    className="w-full bg-white/5 border border-white/15 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-cyan-400 transition-colors"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-cyan-500 focus:bg-white transition-colors"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-white/70 mb-1.5 flex items-center gap-1.5">
-                    <Phone className="w-3.5 h-3.5 text-cyan-400" /> Phone / WhatsApp *
+                  <label className="block text-xs font-semibold text-slate-700 mb-1.5 flex items-center gap-1.5">
+                    <Phone className="w-3.5 h-3.5 text-cyan-600" /> Phone / WhatsApp *
                   </label>
                   <input
                     type="tel"
@@ -1037,15 +1017,15 @@ export default function Pricing() {
                     value={formPhone}
                     onChange={(e) => setFormPhone(e.target.value)}
                     required
-                    className="w-full bg-white/5 border border-white/15 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-cyan-400 transition-colors"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-cyan-500 focus:bg-white transition-colors"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-medium text-white/70 mb-1.5 flex items-center gap-1.5">
-                    <Mail className="w-3.5 h-3.5 text-cyan-400" /> Work Email *
+                  <label className="block text-xs font-semibold text-slate-700 mb-1.5 flex items-center gap-1.5">
+                    <Mail className="w-3.5 h-3.5 text-cyan-600" /> Work Email *
                   </label>
                   <input
                     type="email"
@@ -1053,32 +1033,32 @@ export default function Pricing() {
                     value={formEmail}
                     onChange={(e) => setFormEmail(e.target.value)}
                     required
-                    className="w-full bg-white/5 border border-white/15 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-cyan-400 transition-colors"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-cyan-500 focus:bg-white transition-colors"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-white/70 mb-1.5 flex items-center gap-1.5">
-                    <Building2 className="w-3.5 h-3.5 text-cyan-400" /> Clinic / Practice Name
+                  <label className="block text-xs font-semibold text-slate-700 mb-1.5 flex items-center gap-1.5">
+                    <Building2 className="w-3.5 h-3.5 text-cyan-600" /> Clinic / Practice Name
                   </label>
                   <input
                     type="text"
                     placeholder="City Care Polyclinic"
                     value={formOrg}
                     onChange={(e) => setFormOrg(e.target.value)}
-                    className="w-full bg-white/5 border border-white/15 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-cyan-400 transition-colors"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-cyan-500 focus:bg-white transition-colors"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-white/70 mb-1.5 flex items-center gap-1.5">
-                  <MessageSquare className="w-3.5 h-3.5 text-cyan-400" /> Pre-filled Requirements & Note (Editable)
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5 flex items-center gap-1.5">
+                  <MessageSquare className="w-3.5 h-3.5 text-cyan-600" /> Pre-filled Requirements & Note (Editable)
                 </label>
                 <textarea
                   rows={3}
                   value={formMessage}
                   onChange={(e) => setFormMessage(e.target.value)}
-                  className="w-full bg-white/5 border border-white/15 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder:text-white/30 focus:outline-none focus:border-cyan-400 transition-colors resize-none leading-relaxed"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-cyan-500 focus:bg-white transition-colors resize-none leading-relaxed"
                 />
               </div>
 
@@ -1086,7 +1066,7 @@ export default function Pricing() {
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2.5 rounded-full text-xs text-white/60 hover:text-white transition-colors"
+                  className="px-4 py-2.5 rounded-full text-xs font-semibold text-slate-600 hover:text-slate-900 transition-colors"
                 >
                   Cancel
                 </button>
