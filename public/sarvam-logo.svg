@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 36" fill="none">
+  <!-- Sarvam AI Geometric Icon -->
+  <g transform="translate(4, 3)">
+    <!-- Outer Arch -->
+    <path d="M2 25 C2 13 11 4 23 4 C35 4 44 13 44 25" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"/>
+    <!-- Middle Arch -->
+    <path d="M9 25 C9 17 15 11 23 11 C31 11 37 17 37 25" stroke="#FFFFFF" stroke-width="2.6" stroke-linecap="round"/>
+    <!-- Inner Arch -->
+    <path d="M16 25 C16 21 19 18 23 18 C27 18 30 21 30 25" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round"/>
+    <!-- Center Core Point -->
+    <circle cx="23" cy="25" r="2.2" fill="#00D2FF"/>
+  </g>
+  <!-- Wordmark "sarvam.ai" -->
+  <text x="54" y="24" font-family="-apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif" font-size="19" font-weight="700" fill="#FFFFFF" letter-spacing="-0.03em">sarvam<tspan font-weight="500" fill="#00D2FF">.ai</tspan></text>
+</svg>
+

@@ -1,11 +1,17 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import SEO from "@/components/common/SEO";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft, RefreshCw, Ban, Clock, CreditCard, AlertTriangle } from "lucide-react";
 
 const RefundPolicy = () => {
   return (
     <div className="min-h-screen bg-slate-50 py-12">
+      <SEO
+        title="Refund & Cancellation Policy — Curezy"
+        description="Clear and transparent refund and cancellation policies for Curezy appointments, orders, and healthcare services."
+        canonical="https://www.curezy.in/refund-policy"
+      />
       <div className="max-w-4xl mx-auto px-6">
         <Link to="/" className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-700 mb-8 transition-colors">
           <ArrowLeft className="h-4 w-4" />

@@ -1,19 +1,24 @@
-import { useEffect } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect } from "react";
 import { motion } from "framer-motion";
 import {
-  ArrowLeft,
   Stethoscope,
   Pill,
-  Truck,
-  Activity,
   ShieldCheck,
   FileText,
   CreditCard,
   Phone,
   CheckCircle2,
   Star,
+  Download,
+  ArrowRight,
+  Sparkles,
+  Smartphone,
+  Lock,
 } from "lucide-react";
+import CosmicFrame from "@/components/landing/CosmicFrame";
+import LandingNav from "@/components/landing/LandingNav";
+import LandingFooter from "@/components/landing/LandingFooter";
+import SEO from "@/components/common/SEO";
 import {
   Accordion,
   AccordionContent,
@@ -26,149 +31,155 @@ const PLAY_STORE_URL =
 const UPTODOWN_URL = "https://curezy.en.uptodown.com/android";
 const PLAY_BADGE =
   "https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png";
-const UPTODOWN_BADGE =
-  "https://stc.utdstc.com/img/mediakit/download-gio-big-b.png";
 
 const features = [
   {
-    icon: <Activity className="w-6 h-6" />,
+    icon: Sparkles,
     title: "AI Symptom Checker",
-    desc: "Describe your symptoms and get instant AI-powered insights with possible causes and next steps.",
+    desc: "Describe what you feel in natural language. Get clinical guidance, triage recommendations, and urgency assessment.",
+    badge: "AI Powered",
   },
   {
-    icon: <Stethoscope className="w-6 h-6" />,
-    title: "Online Doctor Consultations",
-    desc: "Book verified doctors near you and consult via chat, call, or in-person — payment-first, no surprises.",
+    icon: Stethoscope,
+    title: "Doctor Consultations",
+    desc: "Find verified specialists near you and book video, audio, or in-person clinic visits with zero waiting friction.",
+    badge: "Verified Doctors",
   },
   {
-    icon: <Pill className="w-6 h-6" />,
+    icon: Pill,
     title: "Instant Medicine Delivery",
-    desc: "Order from nearby pharmacies, upload prescriptions, and track delivery live on the map.",
+    desc: "Upload prescriptions and receive medicines from licensed local pharmacies delivered directly to your doorstep.",
+    badge: "Fast Delivery",
   },
   {
-    icon: <Phone className="w-6 h-6" />,
+    icon: Phone,
     title: "24/7 Emergency Assistance",
-    desc: "One-tap emergency support with location sharing and rapid responder matching.",
+    desc: "One-tap SOS dispatch with real-time GPS location sharing and automated responder alerts when every second counts.",
+    badge: "24/7 SOS",
   },
   {
-    icon: <FileText className="w-6 h-6" />,
-    title: "Medical Records Vault",
-    desc: "Securely store prescriptions and reports. AI-extracted summaries make follow-ups effortless.",
+    icon: FileText,
+    title: "Encrypted Health Vault",
+    desc: "Safely store lab reports, prescriptions, and medical histories with smart AI summarization for follow-up consults.",
+    badge: "ABDM Ready",
   },
   {
-    icon: <CreditCard className="w-6 h-6" />,
-    title: "Secure Payments",
-    desc: "Razorpay-powered checkout with UPI, cards, and wallets. End-to-end encrypted.",
+    icon: CreditCard,
+    title: "Zero-Friction Payments",
+    desc: "Secure checkout powered by Razorpay. Seamlessly pay via UPI, Credit/Debit cards, or Net Banking with zero hidden fees.",
+    badge: "100% Secure",
   },
 ];
 
 const trustPoints = [
-  "HIPAA-aligned data handling",
-  "India DPDP Act 2023 compliant",
-  "Verified pharmacies & doctors",
-  "Made in India 🇮🇳 — Indore, MP",
+  { title: "HIPAA & DPDP Aligned", desc: "Sovereign data encryption at rest and in transit." },
+  { title: "Verified Clinicians", desc: "Every practicing doctor and clinic is strictly vetted." },
+  { title: "Zero Data Selling", desc: "Your personal health records belong strictly to you." },
+  { title: "Proudly Made in India", desc: "Engineered in Indore, MP for India's healthcare needs." },
+];
+
+const steps = [
+  {
+    num: "01",
+    title: "Install the app",
+    desc: "Download Curezy free from Google Play or Uptodown in under 30 seconds.",
+  },
+  {
+    num: "02",
+    title: "Quick phone setup",
+    desc: "Sign in with a simple OTP. No passwords to remember, no tedious paperwork.",
+  },
+  {
+    num: "03",
+    title: "Access care instantly",
+    desc: "Check symptoms, consult doctors, and order medications right from your phone.",
+  },
 ];
 
 const faqs = [
   {
     q: "Is the Curezy app free to download?",
-    a: "Yes. Curezy is completely free to download from Google Play. You only pay for the medical services or medicines you order through the app.",
+    a: "Yes. Curezy is 100% free to download from Google Play. You only pay for medical consultations or medicines you order directly through the app.",
   },
   {
-    q: "Which devices are supported?",
-    a: "Curezy currently supports Android 7.0 (Nougat) and above. An iOS version is on our roadmap.",
+    q: "Which devices and Android versions are supported?",
+    a: "Curezy runs smoothly on Android 7.0 (Nougat) and above, supporting both budget and flagship smartphones.",
   },
   {
-    q: "Is my health data safe?",
-    a: "Absolutely. Your data is encrypted in transit and at rest, stored on secure infrastructure, and never sold to third parties. See our Privacy Policy for full details.",
+    q: "How does the AI Symptom Checker protect my privacy?",
+    a: "Your symptom conversations are fully encrypted and never used for advertising. Curezy adheres to India's Digital Personal Data Protection (DPDP) Act.",
   },
   {
     q: "Do I need a prescription to order medicines?",
-    a: "For prescription medicines, yes — you can upload a photo of your prescription during checkout. Over-the-counter products can be ordered directly.",
+    a: "For scheduled prescription drugs, you can easily snap and upload a photo of your doctor's prescription during checkout. OTC items can be ordered directly.",
   },
   {
-    q: "How do I contact support?",
-    a: "Email us at admin@curezy.in or call +91 9165043258. Our team is available 24/7 for emergencies.",
+    q: "How do I reach emergency or customer support?",
+    a: "Reach our 24/7 support line at +91 9165043258 or email admin@curezy.in. The in-app emergency button also triggers instant responder alerts.",
   },
 ];
 
 const DownloadApp = () => {
   useEffect(() => {
-    document.title = "Download Curezy App — AI Health Assistant on Google Play";
-    const meta = document.querySelector('meta[name="description"]');
-    if (meta) {
-      meta.setAttribute(
-        "content",
-        "Download the Curezy Android app on Google Play. AI symptom checker, online doctor consultations, medicine delivery, and 24/7 emergency assistance. Free."
-      );
-    }
+    window.scrollTo(0, 0);
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50/40 via-white to-white text-gray-900 antialiased overflow-x-hidden">
-      {/* Top Bar */}
-      <header className="sticky top-0 z-40 backdrop-blur-md bg-white/70 border-b border-gray-100">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2 group">
-            <ArrowLeft className="w-4 h-4 text-gray-500 group-hover:-translate-x-0.5 transition-transform" />
-            <span className="text-xl font-bold tracking-tight">Curezy</span>
-          </Link>
-          <a
-            href={PLAY_STORE_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hidden sm:inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 rounded-full shadow-lg shadow-blue-600/20 transition-all hover:scale-105"
-          >
-            Get it on Google Play
-          </a>
-        </div>
-      </header>
+    <CosmicFrame>
+      <SEO
+        title="Download Curezy App — AI Health Assistant on Google Play"
+        description="Download the Curezy Android app on Google Play. AI symptom checker, online doctor consultations, medicine delivery, and 24/7 emergency assistance. Free."
+        canonical="https://www.curezy.in/download"
+      />
+      <LandingNav />
 
-      {/* Hero */}
-      <section className="relative pt-16 pb-20 lg:pt-24 lg:pb-28 overflow-hidden">
-        <div className="absolute top-0 right-0 -translate-y-1/3 translate-x-1/4 w-96 h-96 bg-blue-200 rounded-full blur-3xl opacity-30" />
-        <div className="absolute bottom-0 left-0 translate-y-1/3 -translate-x-1/4 w-96 h-96 bg-indigo-200 rounded-full blur-3xl opacity-30" />
-
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 text-center relative z-10">
+      <main className="relative pt-36 pb-24 md:pt-44 md:pb-32 overflow-hidden">
+        {/* Hero Section */}
+        <div className="container relative max-w-5xl mx-auto px-4 sm:px-6 text-center">
+          {/* Live Status Pill */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 border border-blue-100 text-blue-700 text-xs font-semibold tracking-wide mb-6"
+            transition={{ duration: 0.5 }}
+            className="inline-flex items-center gap-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 text-cyan-700 text-[11px] font-semibold px-3.5 py-1.5 mb-6 shadow-[0_0_20px_-3px_rgba(6,182,212,0.3)]"
           >
-            <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-            NOW LIVE ON GOOGLE PLAY
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            LIVE ON GOOGLE PLAY · ANDROID APP V1.0
           </motion.div>
 
+
+
+          {/* Clean Minimal Headline */}
           <motion.h1
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.05 }}
-            className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight mb-6"
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="font-display text-slate-900 text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-[-0.035em] leading-[1.08]"
           >
             Healthcare in your pocket.
             <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">
-              Download Curezy.
+            <span className="bg-gradient-to-r from-cyan-600 via-[#2563ff] to-blue-700 bg-clip-text text-transparent">
+              Empowered by Clinical AI.
             </span>
           </motion.h1>
 
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-lg text-gray-600 max-w-2xl mx-auto mb-10 leading-relaxed"
+            transition={{ duration: 0.6, delay: 0.16 }}
+            className="mt-6 text-base sm:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed"
           >
             AI symptom checks, verified doctor consultations, instant medicine
-            delivery, and 24/7 emergency support — all in one beautifully simple
-            Android app.
+            delivery, and 24/7 emergency support — unified into a clean, minimal
+            Android application.
           </motion.p>
 
+          {/* Download Buttons & Specs */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, delay: 0.15 }}
-            className="flex flex-col items-center gap-4"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.22 }}
+            className="mt-8 flex flex-col items-center gap-4"
           >
             <a
               href={PLAY_STORE_URL}
@@ -180,18 +191,21 @@ const DownloadApp = () => {
               <img
                 src={PLAY_BADGE}
                 alt="Get it on Google Play"
-                className="h-20 w-auto"
+                className="h-16 sm:h-20 w-auto"
               />
             </a>
 
-            <div className="flex items-center gap-3 text-sm text-gray-500">
-              <span>Free</span>
-              <span className="w-1 h-1 bg-gray-300 rounded-full" />
+            {/* Quick Specs Pill */}
+            <div className="flex flex-wrap items-center justify-center gap-3 text-xs sm:text-sm text-slate-500 font-medium">
+              <span className="inline-flex items-center gap-1 text-slate-700">
+                <Download className="w-3.5 h-3.5 text-[#2563ff]" /> Free Download
+              </span>
+              <span className="w-1 h-1 bg-slate-300 rounded-full" />
               <span>Android 7.0+</span>
-              <span className="w-1 h-1 bg-gray-300 rounded-full" />
-              <span className="flex items-center gap-1">
-                <Star className="w-3.5 h-3.5 fill-yellow-400 text-yellow-400" />
-                4.8
+              <span className="w-1 h-1 bg-slate-300 rounded-full" />
+              <span className="inline-flex items-center gap-1 text-amber-600 font-semibold">
+                <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+                4.8 Rating
               </span>
             </div>
 
@@ -199,200 +213,197 @@ const DownloadApp = () => {
               href={UPTODOWN_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-xs text-gray-500 hover:text-blue-600 underline-offset-4 hover:underline mt-2"
+              className="text-xs text-slate-400 hover:text-[#2563ff] transition-colors underline-offset-4 hover:underline mt-1"
             >
-              Can't access Play Store? Download from Uptodown
+              Alternative direct mirror: Download via Uptodown
             </a>
           </motion.div>
-        </div>
-      </section>
 
-      {/* Features */}
-      <section className="py-20 bg-white border-y border-gray-100">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <div className="text-center max-w-2xl mx-auto mb-14">
-            <p className="text-xs font-semibold tracking-[0.2em] text-blue-600 uppercase mb-3">
-              What's Inside
-            </p>
-            <h2 className="text-3xl lg:text-4xl font-bold mb-4">
-              Everything you need for better health
-            </h2>
-            <p className="text-gray-600 text-lg">
-              Built for India. Designed for everyone.
-            </p>
-          </div>
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {features.map((f, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.05 }}
-                className="group bg-white p-7 rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl hover:border-blue-200 hover:-translate-y-1 transition-all duration-300"
-              >
-                <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mb-5 group-hover:bg-blue-600 group-hover:text-white transition-colors">
-                  {f.icon}
-                </div>
-                <h3 className="text-lg font-bold mb-2">{f.title}</h3>
-                <p className="text-gray-600 text-sm leading-relaxed">{f.desc}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Why Curezy */}
-      <section className="py-20 bg-gradient-to-br from-blue-600 to-indigo-700 text-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10" />
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 relative z-10">
-          <div className="text-center mb-12">
-            <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 mb-5">
-              <ShieldCheck className="w-7 h-7" />
-            </div>
-            <h2 className="text-3xl lg:text-4xl font-bold mb-3">
-              Why patients trust Curezy
-            </h2>
-            <p className="text-blue-100 text-lg">
-              Privacy-first, regulator-aligned, and built for real Indian
-              healthcare.
-            </p>
-          </div>
-          <div className="grid sm:grid-cols-2 gap-4 max-w-2xl mx-auto">
-            {trustPoints.map((point, i) => (
-              <div
-                key={i}
-                className="flex items-center gap-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl px-5 py-4"
-              >
-                <CheckCircle2 className="w-5 h-5 text-green-300 shrink-0" />
-                <span className="font-medium">{point}</span>
+          {/* App Preview Mockup */}
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.3 }}
+            className="mt-14 max-w-3xl mx-auto"
+          >
+            <div className="relative rounded-3xl border border-slate-200/80 bg-white/70 backdrop-blur-md p-4 sm:p-6 shadow-[0_20px_60px_-20px_rgba(15,23,42,0.12)]">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+                {[
+                  { img: "/src/assets/app-mockup-1.png", label: "" },
+                  { img: "/src/assets/app-mockup-2.png", label: "" },
+                  { img: "/src/assets/app-mockup-3.png", label: "" },
+                  { img: "/src/assets/app-mockup-4.png", label: "" },
+                ].map((item, idx) => (
+                  <div key={idx} className="group flex flex-col items-center">
+                    <div className="w-full aspect-[9/16] overflow-hidden rounded-2xl border border-slate-100 bg-slate-50 flex items-center justify-center shadow-sm group-hover:shadow-md group-hover:border-[#2563ff]/30 transition-all duration-300">
+                      <img
+                        src={item.img}
+                        alt={item.label}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        onError={(e) => {
+                          // Fallback if asset path differs
+                          (e.target as HTMLElement).style.display = "none";
+                        }}
+                      />
+                    </div>
+                    <span className="mt-2 text-[11px] font-medium text-slate-500">
+                      {item.label}
+                    </span>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            </div>
+          </motion.div>
         </div>
-      </section>
 
-      {/* How it works */}
-      <section className="py-20 bg-white">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6">
-          <div className="text-center mb-14">
-            <p className="text-xs font-semibold tracking-[0.2em] text-blue-600 uppercase mb-3">
-              Get Started
-            </p>
-            <h2 className="text-3xl lg:text-4xl font-bold">
-              Three steps to better care
-            </h2>
+        {/* Core Capabilities Grid (Clean & Minimal) */}
+        <section className="mt-24 sm:mt-32 border-t border-slate-200/70 pt-20">
+          <div className="container max-w-6xl mx-auto px-4 sm:px-6">
+            <div className="text-center max-w-2xl mx-auto mb-14">
+              <div className="eyebrow mb-2">Core Features</div>
+              <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-[-0.03em]">
+                Everything you need for smarter care
+              </h2>
+              <p className="mt-3 text-slate-600 text-sm sm:text-base">
+                Engineered for rapid response, high clinical accuracy, and zero technical hassle.
+              </p>
+            </div>
+
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              {features.map((feat, i) => {
+                const Icon = feat.icon;
+                return (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, y: 16 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.05 }}
+                    className="p-6 rounded-2xl bg-white border border-slate-200/80 shadow-[0_4px_20px_-8px_rgba(15,23,42,0.06)] hover:border-[#2563ff]/40 hover:shadow-[0_12px_30px_-10px_rgba(37,99,255,0.12)] hover:-translate-y-0.5 transition-all duration-200 flex flex-col justify-between group"
+                  >
+                    <div>
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="w-10 h-10 rounded-xl bg-cyan-50 border border-cyan-100 flex items-center justify-center text-[#2563ff] group-hover:bg-[#2563ff] group-hover:text-white transition-colors duration-200">
+                          <Icon className="w-5 h-5" />
+                        </div>
+                        <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200/60">
+                          {feat.badge}
+                        </span>
+                      </div>
+                      <h3 className="font-display font-bold text-slate-900 text-base mb-2 group-hover:text-[#2563ff] transition-colors">
+                        {feat.title}
+                      </h3>
+                      <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                        {feat.desc}
+                      </p>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
           </div>
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              { n: "01", t: "Install the app", d: "Download Curezy free from Google Play in seconds." },
-              { n: "02", t: "Create your profile", d: "Sign up with your phone, add health info securely." },
-              { n: "03", t: "Get care instantly", d: "Symptoms, doctors, medicines, emergency — all in one tap." },
-            ].map((s, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="relative"
-              >
-                <div className="text-5xl font-extrabold text-blue-100 mb-3">
-                  {s.n}
+        </section>
+
+        {/* 3 Simple Steps */}
+        <section className="mt-24 sm:mt-32">
+          <div className="container max-w-5xl mx-auto px-4 sm:px-6">
+            <div className="text-center max-w-2xl mx-auto mb-14">
+              <div className="eyebrow mb-2">Getting Started</div>
+              <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-[-0.03em]">
+                Three steps to personal care
+              </h2>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-6">
+              {steps.map((st, i) => (
+                <div
+                  key={i}
+                  className="p-6 rounded-2xl bg-white border border-slate-200/80 shadow-sm relative overflow-hidden"
+                >
+                  <div className="text-4xl font-extrabold font-display text-cyan-600/20 mb-3">
+                    {st.num}
+                  </div>
+                  <h3 className="font-display font-bold text-slate-900 text-base mb-2">
+                    {st.title}
+                  </h3>
+                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                    {st.desc}
+                  </p>
                 </div>
-                <h3 className="text-xl font-bold mb-2">{s.t}</h3>
-                <p className="text-gray-600 leading-relaxed">{s.d}</p>
-              </motion.div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* FAQ */}
-      <section className="py-20 bg-gray-50 border-y border-gray-100">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl lg:text-4xl font-bold mb-3">
-              Frequently asked questions
+
+        {/* FAQs */}
+        <section className="mt-24 sm:mt-32">
+          <div className="container max-w-3xl mx-auto px-4 sm:px-6">
+            <div className="text-center mb-10">
+              <div className="eyebrow mb-2">App Questions</div>
+              <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-[-0.03em]">
+                Frequently asked questions
+              </h2>
+            </div>
+
+            <Accordion type="single" collapsible className="space-y-3">
+              {faqs.map((f, i) => (
+                <AccordionItem
+                  key={i}
+                  value={`item-${i}`}
+                  className="bg-white border border-slate-200/80 rounded-2xl px-5 shadow-sm overflow-hidden"
+                >
+                  <AccordionTrigger className="text-left font-display font-semibold text-slate-900 text-sm sm:text-base hover:no-underline py-4">
+                    {f.q}
+                  </AccordionTrigger>
+                  <AccordionContent className="text-xs sm:text-sm text-slate-600 leading-relaxed pb-4">
+                    {f.a}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </div>
+        </section>
+
+        {/* Final CTA */}
+        <section className="mt-24 sm:mt-32 text-center">
+          <div className="container max-w-3xl mx-auto px-4 sm:px-6">
+            <h2 className="font-display text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight mb-4">
+              Ready to take charge of your health?
             </h2>
-            <p className="text-gray-600">
-              Everything you need to know before downloading.
+            <p className="text-slate-600 text-sm sm:text-base mb-8 max-w-xl mx-auto">
+              Join patients across India who rely on Curezy for fast doctor access,
+              accurate AI insights, and reliable medical delivery.
             </p>
-          </div>
-          <Accordion type="single" collapsible className="space-y-3">
-            {faqs.map((f, i) => (
-              <AccordionItem
-                key={i}
-                value={`item-${i}`}
-                className="bg-white border border-gray-100 rounded-2xl px-5 shadow-sm"
+            <div className="flex flex-col items-center gap-3">
+              <a
+                href={PLAY_STORE_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Get Curezy on Google Play"
+                className="inline-block transition-transform hover:scale-105"
               >
-                <AccordionTrigger className="text-left font-semibold hover:no-underline">
-                  {f.q}
-                </AccordionTrigger>
-                <AccordionContent className="text-gray-600 leading-relaxed">
-                  {f.a}
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
-        </div>
-      </section>
-
-      {/* Final CTA */}
-      <section className="py-24 bg-white text-center">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6">
-          <h2 className="text-3xl lg:text-5xl font-bold mb-6">
-            Ready when you are.
-          </h2>
-          <p className="text-gray-600 text-lg mb-10">
-            Join thousands using Curezy every day. Free, secure, and built for
-            India.
-          </p>
-          <div className="flex flex-col items-center gap-4">
-            <a
-              href={PLAY_STORE_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Get Curezy on Google Play"
-              className="inline-block transition-transform hover:scale-105"
-            >
-              <img
-                src={PLAY_BADGE}
-                alt="Get it on Google Play"
-                className="h-20 w-auto"
-              />
-            </a>
-            <a
-              href={UPTODOWN_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-sm text-gray-500 hover:text-blue-600 underline-offset-4 hover:underline"
-            >
-              Also available on Uptodown
-            </a>
+                <img
+                  src={PLAY_BADGE}
+                  alt="Get it on Google Play"
+                  className="h-16 sm:h-20 w-auto"
+                />
+              </a>
+              <a
+                href={UPTODOWN_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs text-slate-500 hover:text-[#2563ff] transition-colors underline-offset-4 hover:underline"
+              >
+                Download APK directly from Uptodown
+              </a>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </main>
 
-      {/* Mini footer */}
-      <footer className="border-t border-gray-100 py-8 bg-white">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-gray-500">
-          <p>© {new Date().getFullYear()} Curezy LLP. All rights reserved.</p>
-          <div className="flex items-center gap-5">
-            <Link to="/privacy-policy" className="hover:text-blue-600">
-              Privacy
-            </Link>
-            <Link to="/terms-of-service" className="hover:text-blue-600">
-              Terms
-            </Link>
-            <a href="/#contact" className="hover:text-blue-600">
-              Contact
-            </a>
-          </div>
-        </div>
-      </footer>
-    </div>
+      <LandingFooter />
+    </CosmicFrame>
   );
 };
 

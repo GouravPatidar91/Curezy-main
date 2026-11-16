@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
+import SEO from "@/components/common/SEO";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Shield, Lock, Eye, Users, FileText, Phone, Mail, MapPin,
@@ -23,6 +24,11 @@ const PrivacyPolicy = () => {
 
   return (
     <div className="min-h-screen bg-slate-50 py-12">
+      <SEO
+        title="Privacy Policy — Curezy Healthcare Technologies"
+        description="Curezy Privacy Policy — what data we collect, how we use it, who we share it with, and how long we retain it. Curezy LLP, India."
+        canonical="https://www.curezy.in/privacy-policy"
+      />
       <div className="max-w-4xl mx-auto px-6">
         <Link to="/" className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-700 mb-6 transition-colors">
           <ArrowLeft className="h-4 w-4" /> Back to Home

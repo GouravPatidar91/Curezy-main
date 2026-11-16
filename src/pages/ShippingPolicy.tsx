@@ -1,11 +1,17 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import SEO from "@/components/common/SEO";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft, Truck, MapPin, Clock, IndianRupee, Package } from "lucide-react";
 
 const ShippingPolicy = () => {
   return (
     <div className="min-h-screen bg-slate-50 py-12">
+      <SEO
+        title="Shipping & Delivery Policy — Curezy"
+        description="Information regarding shipping, delivery timelines, coverage zones, and handling for Curezy medicine and wellness deliveries."
+        canonical="https://www.curezy.in/shipping-policy"
+      />
       <div className="max-w-4xl mx-auto px-6">
         <Link to="/" className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-700 mb-8 transition-colors">
           <ArrowLeft className="h-4 w-4" />

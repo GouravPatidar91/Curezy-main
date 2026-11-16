@@ -23,6 +23,7 @@ import {
 import CosmicFrame from "@/components/landing/CosmicFrame";
 import LandingNav from "@/components/landing/LandingNav";
 import LandingFooter from "@/components/landing/LandingFooter";
+import SEO from "@/components/common/SEO";
 import {
   Carousel,
   CarouselContent,
@@ -538,6 +539,11 @@ export default function Pricing() {
 
   return (
     <CosmicFrame>
+      <SEO
+        title="Pricing & Plans — Curezy Clinic Care Automation OS"
+        description="Transparent pricing for AI-powered clinic automation, WhatsApp patient follow-ups, and voice receptionists. Choose the plan that scales with your clinic."
+        canonical="https://www.curezy.in/pricing"
+      />
       <LandingNav />
 
       <main className="pt-28 md:pt-36 pb-20">

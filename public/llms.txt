@@ -1,0 +1,18 @@
+# Curezy
+
+> AI Care Operating System for Clinics & Autonomous Healthcare Workflows.
+
+Curezy automates clinic operations, patient follow-ups, medication adherence tracking, and engagement over WhatsApp & AI Voice. Built with HIPAA and DPDP compliance.
+
+## Key Information & Links
+
+- [Overview & Agent Specs](https://www.curezy.in/agent.md): Technical and operational overview of Curezy AI Care OS, WhatsApp native care workflows, and outbound voice agents.
+- [Pricing & Plans](https://www.curezy.in/pricing): Clinic automation tiers, provider seats, and AI voice minutes.
+- [About Curezy](https://www.curezy.in/about-us): Mission, leadership, and company background.
+- [Android App](https://play.google.com/store/apps/details?id=com.curezy.app): Curezy patient health companion app.
+
+## Capabilities for Clinics
+- **WhatsApp Native Care OS:** Automated appointment reminders, triage, medication adherence loops, and follow-ups without requiring app downloads.
+- **AI Voice Agents:** Medically-grounded voice calling to recover lost appointments, follow up post-consultation, and collect feedback.
+- **EMR Integration:** Bi-directional sync with clinic management systems and electronic medical records.
+

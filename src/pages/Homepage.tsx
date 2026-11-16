@@ -1,5 +1,6 @@
 import LandingNav from "@/components/landing/LandingNav";
 import CosmicFrame from "@/components/landing/CosmicFrame";
+import SEO from "@/components/common/SEO";
 import Hero from "@/components/landing/Hero";
 import TrustBar from "@/components/landing/TrustBar";
 import HowItWorks from "@/components/landing/HowItWorks";
@@ -19,6 +20,11 @@ import LandingFooter from "@/components/landing/LandingFooter";
 export default function Homepage() {
   return (
     <CosmicFrame>
+      <SEO
+        title="Curezy — AI Clinic Management Software & Healthcare Automation"
+        description="Curezy automates clinic operations, patient follow-ups, and engagement over WhatsApp & AI Voice. HIPAA & DPDP compliant. Book your live clinic demo today."
+        canonical="https://www.curezy.in/"
+      />
       <LandingNav />
       <main>
         <Hero />

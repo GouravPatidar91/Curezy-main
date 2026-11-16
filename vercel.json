@@ -13,7 +13,26 @@
         { "key": "Content-Type", "value": "application/json" },
         { "key": "Cache-Control", "value": "public, max-age=3600" }
       ]
+    },
+    {
+      "source": "/llms.txt",
+      "headers": [
+        { "key": "Content-Type", "value": "text/plain; charset=utf-8" },
+        { "key": "Cache-Control", "value": "public, max-age=86400" }
+      ]
+    },
+    {
+      "source": "/agent.md",
+      "headers": [
+        { "key": "Content-Type", "value": "text/markdown; charset=utf-8" },
+        { "key": "Cache-Control", "value": "public, max-age=86400" }
+      ]
     }
+  ],
+  "redirects": [
+    { "source": "/about", "destination": "/about-us", "permanent": true },
+    { "source": "/contact", "destination": "/#contact", "permanent": true },
+    { "source": "/contact-us", "destination": "/#contact", "permanent": true }
   ],
   "rewrites": [
     { "source": "/.well-known/:path*", "destination": "/.well-known/:path*" },

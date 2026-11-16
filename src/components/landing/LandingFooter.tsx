@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Github, Linkedin, Mail } from "lucide-react";
+import GooglePreferredSourceBtn from "@/components/common/GooglePreferredSourceBtn";
 
 const cols = [
   {
@@ -66,21 +67,44 @@ export default function LandingFooter() {
             <p className="text-sm text-white/50 max-w-xs leading-relaxed">
               The AI Care Operating System for modern clinics. WhatsApp + Voice, automated end-to-end.
             </p>
+            <div className="mt-6 flex flex-col gap-4">
+              <div>
+                <p className="text-[10px] uppercase tracking-[0.2em] text-white/40 mb-2">Backed by</p>
+                <a
+                  href="https://elevenlabs.io/startup-grants"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="ElevenLabs Startup Grants"
+                  className="opacity-80 hover:opacity-100 transition-opacity inline-block"
+                >
+                  <img
+                    src="/elevenlabs-grants.webp"
+                    alt="ElevenLabs Grants"
+                    className="w-[170px] h-auto object-contain invert"
+                  />
+                </a>
+              </div>
+
+              <div>
+                <p className="text-[10px] uppercase tracking-[0.2em] text-white/40 mb-2">Powered by</p>
+                <a
+                  href="https://www.sarvam.ai"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Sarvam AI"
+                  className="opacity-85 hover:opacity-100 transition-opacity inline-flex items-center"
+                >
+                  <img
+                    src="/wordmark-dark.png"
+                    alt="Sarvam AI"
+                    className="h-6 w-auto object-contain invert"
+                  />
+                </a>
+              </div>
+            </div>
             <div className="mt-6">
-              <p className="text-[10px] uppercase tracking-[0.2em] text-white/40 mb-2">Backed by</p>
-              <a
-                href="https://elevenlabs.io/startup-grants"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="ElevenLabs Startup Grants"
-                className="opacity-80 hover:opacity-100 transition-opacity inline-block"
-              >
-                <img
-                  src="/elevenlabs-grants.webp"
-                  alt="ElevenLabs Grants"
-                  className="w-[180px] h-auto object-contain invert"
-                />
-              </a>
+              <p className="text-[10px] uppercase tracking-[0.2em] text-white/40 mb-2">Google Preferred Source</p>
+              <GooglePreferredSourceBtn theme="light" className="inline-block" />
             </div>
             <div className="flex items-center gap-3 mt-6">
               <a href="mailto:admin@curezy.in" className="w-9 h-9 rounded-full border border-white/[0.1] grid place-items-center text-white/70 hover:text-white hover:border-white/30 transition-colors">

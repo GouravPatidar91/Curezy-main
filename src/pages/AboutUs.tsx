@@ -3,16 +3,17 @@ import { Link } from "react-router-dom";
 import CosmicFrame from "@/components/landing/CosmicFrame";
 import LandingNav from "@/components/landing/LandingNav";
 import LandingFooter from "@/components/landing/LandingFooter";
-import { 
-  ArrowLeft, 
-  Activity, 
-  Stethoscope, 
-  Pill, 
-  Users, 
-  Target, 
-  Cpu, 
-  Globe, 
-  ShieldCheck, 
+import SEO from "@/components/common/SEO";
+import {
+  ArrowLeft,
+  Activity,
+  Stethoscope,
+  Pill,
+  Users,
+  Target,
+  Cpu,
+  Globe,
+  ShieldCheck,
   ExternalLink,
   Award,
   Sparkles,
@@ -22,6 +23,11 @@ import {
 const AboutUs = () => {
   return (
     <CosmicFrame>
+      <SEO
+        title="About Curezy — Building the Future of Autonomous Clinics"
+        description="Learn about Curezy's mission to empower healthcare providers with autonomous AI care operations, empathetic patient engagement, and smart clinic workflows."
+        canonical="https://www.curezy.in/about-us"
+      />
       {/* Import premium font styles directly in React for compatibility */}
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
@@ -30,7 +36,7 @@ const AboutUs = () => {
       `}</style>
 
       <LandingNav />
-      
+
       <main className="relative pt-36 pb-32 overflow-hidden bg-black font-jakarta">
         {/* Ambient background radial gradient glows */}
         <div className="absolute top-[-10%] left-[10%] w-[600px] h-[600px] bg-gradient-to-br from-blue-600/10 to-indigo-600/0 rounded-full blur-[140px] pointer-events-none" />
@@ -41,11 +47,11 @@ const AboutUs = () => {
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:4rem_4rem] pointer-events-none" />
 
         <div className="container max-w-6xl mx-auto px-6 relative z-10">
-          
+
           {/* Back Navigation Link */}
           <div className="mb-12">
-            <Link 
-              to="/" 
+            <Link
+              to="/"
               className="inline-flex items-center gap-2.5 text-sm font-medium text-white/40 hover:text-white transition-all duration-300 group"
             >
               <span className="p-2 rounded-full border border-white/5 bg-white/[0.02] group-hover:bg-white/10 group-hover:border-white/10 transition-colors">
@@ -58,18 +64,18 @@ const AboutUs = () => {
           {/* Hero Section */}
           <div className="text-center mb-28 space-y-6">
             <div className="inline-flex items-center gap-2 text-xs font-semibold text-emerald-400 bg-emerald-500/10 px-4 py-1.5 rounded-full border border-emerald-500/20 backdrop-blur-md shadow-[0_0_15px_rgba(16,185,129,0.1)]">
-              <Sparkles className="h-3.5 w-3.5" />
+
               <span>NATIONAL HEALTH-TECH INNOVATION</span>
             </div>
-            
+
             <h1 className="text-4xl md:text-7xl font-grotesk font-bold text-white tracking-tight max-w-4xl mx-auto leading-[1.05] bg-gradient-to-b from-white via-white to-white/40 bg-clip-text text-transparent">
               Pioneering Autonomous Clinical Care
             </h1>
-            
+
             <p className="text-lg md:text-xl text-white/50 max-w-3xl mx-auto leading-relaxed font-light">
               Curezy OS introduces the next generation of clinical operations. Through localized, multilingual autonomous AI systems, we eliminate administrative bottlenecks to let clinics and hospitals focus on what matters most—saving lives.
             </p>
-            
+
             <div className="pt-4 flex justify-center">
               <a
                 href="https://elevenlabs.io/startup-grants"
@@ -166,7 +172,7 @@ const AboutUs = () => {
               </h2>
               <div className="h-1 w-20 bg-gradient-to-r from-blue-500 to-indigo-500 mx-auto rounded-full" />
             </div>
-            
+
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
               <div className="bg-white/[0.01] border border-white/[0.05] rounded-2xl p-7 hover:border-white/10 hover:bg-white/[0.02] transition-all duration-300">
                 <div className="h-10 w-10 rounded-xl bg-blue-500/10 flex items-center justify-center mb-6">
@@ -202,53 +208,6 @@ const AboutUs = () => {
             </div>
           </div>
 
-          {/* Founders & Leadership Section */}
-          <div className="space-y-12">
-            <div className="text-center space-y-3">
-              <h2 className="text-3xl md:text-4xl font-grotesk font-bold text-white tracking-tight">
-                The Innovation Team
-              </h2>
-              <div className="h-1 w-20 bg-gradient-to-r from-emerald-500 to-teal-500 mx-auto rounded-full" />
-            </div>
-            
-            <div className="grid md:grid-cols-3 gap-8">
-              {/* Founder 1 */}
-              <div className="bg-white/[0.01] border border-white/[0.06] rounded-2xl p-8 text-center hover:border-white/10 hover:bg-white/[0.02] transition-all duration-300 shadow-lg">
-                <div className="w-24 h-24 mx-auto rounded-full overflow-hidden mb-6 border-2 border-blue-500/20 p-1 bg-black/40">
-                  <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop" alt="Gourav Patidar" className="w-full h-full object-cover rounded-full" />
-                </div>
-                <h3 className="text-lg font-bold text-white font-grotesk">Gourav Patidar</h3>
-                <p className="text-xs text-emerald-400 font-semibold mb-4 tracking-wider uppercase">Founder & CEO</p>
-                <p className="text-white/50 text-xs leading-relaxed font-light">
-                  Cyber Security background. Former Lead Tech Engineer at AI marketing startup ($30K ARR). Leads product architecture and AI strategy.
-                </p>
-              </div>
-
-              {/* Founder 2 */}
-              <div className="bg-white/[0.01] border border-white/[0.06] rounded-2xl p-8 text-center hover:border-white/10 hover:bg-white/[0.02] transition-all duration-300 shadow-lg">
-                <div className="w-24 h-24 mx-auto rounded-full overflow-hidden mb-6 border-2 border-emerald-500/20 p-1 bg-black/40">
-                  <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop" alt="Dharika Joshi" className="w-full h-full object-cover rounded-full" />
-                </div>
-                <h3 className="text-lg font-bold text-white font-grotesk">Dharika Joshi</h3>
-                <p className="text-xs text-emerald-400 font-semibold mb-4 tracking-wider uppercase">Co-Founder & COO</p>
-                <p className="text-white/50 text-xs leading-relaxed font-light">
-                  Healthcare relationship builder. Leads customer discovery, medical provider partnerships, operational logistics, and CRM success.
-                </p>
-              </div>
-
-              {/* Founder 3 */}
-              <div className="bg-white/[0.01] border border-white/[0.06] rounded-2xl p-8 text-center hover:border-white/10 hover:bg-white/[0.02] transition-all duration-300 shadow-lg">
-                <div className="w-24 h-24 mx-auto rounded-full overflow-hidden mb-6 border-2 border-purple-500/20 p-1 bg-black/40">
-                  <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop" alt="Aniruddh Gupta" className="w-full h-full object-cover rounded-full" />
-                </div>
-                <h3 className="text-lg font-bold text-white font-grotesk">Aniruddh Gupta</h3>
-                <p className="text-xs text-emerald-400 font-semibold mb-4 tracking-wider uppercase">Co-Founder & CTO</p>
-                <p className="text-white/50 text-xs leading-relaxed font-light">
-                  Cyber Security background. Leads backend architecture, real-time voice telephony pipelines, and cloud database integrations.
-                </p>
-              </div>
-            </div>
-          </div>
 
         </div>
       </main>

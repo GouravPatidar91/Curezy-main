@@ -159,7 +159,7 @@ export default function CaseStudy() {
                 <div className="overflow-hidden rounded-xl border border-slate-200 bg-slate-950 relative h-20">
                   <img
                     src="/imaging/axial_ct_segmentation.jpg"
-                    alt="CT Scan"
+                    alt="Curezy AI Medical Imaging CT scan organ segmentation analysis"
                     className="h-full w-full object-cover opacity-90"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent flex items-end p-2">

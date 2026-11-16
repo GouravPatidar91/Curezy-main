@@ -21,6 +21,7 @@ export default function Hero() {
             transition={{ duration: 0.7, delay: 0.05 }}
             className="font-display text-white text-[44px] sm:text-6xl md:text-7xl lg:text-[84px] leading-[0.98] font-semibold tracking-[-0.045em]"
           >
+            <span className="sr-only">AI Clinic Management Software & Care Automation — </span>
             We make AI work for your clinic.
             <br />
             <span className="text-white/50">Not against your patients.</span>

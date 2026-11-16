@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import SEO from "@/components/common/SEO";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
   FileText, 
@@ -23,6 +24,11 @@ import {
 const TermsOfService = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100">
+      <SEO
+        title="Terms of Service — Curezy"
+        description="Terms and conditions governing the use of Curezy healthcare platforms, services, and applications."
+        canonical="https://www.curezy.in/terms-of-service"
+      />
       {/* Header */}
       <div className="bg-slate-900 text-white py-8">
         <div className="max-w-4xl mx-auto px-6">
